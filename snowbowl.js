@@ -7,27 +7,7 @@
  * MIT Licensed.
  */
 
-const getHTML = url =>
-  new Promise((resolve, reject) => {
-    // select http or https module, depending on reqested url
-    const lib = url.startsWith("https") ? require("https") : require("http");
-    const request = lib.get(url, response => {
-      // handle http errors
-      if (response.statusCode < 200 || response.statusCode > 299) {
-        reject(
-          new Error("Failed to load page, status code: " + response.statusCode)
-        );
-      }
-      // temporary data holder
-      const body = [];
-      // on every content chunk, push it to the data array
-      response.on("data", chunk => body.push(chunk));
-      // we are done, resolve promise with those joined chunks
-      response.on("end", () => resolve(body.join("")));
-    });
-    // handle connection errors of the request
-    request.on("error", err => reject(err));
-  });
+
 
 Module.register("snowbowl", {
   defaults: {
@@ -68,9 +48,10 @@ Module.register("snowbowl", {
       Log.error(self.name, this.status);
       retry = false;
     }
-    self.processData(report);
+    this.sendSocketNotification("snowbowl-NOTIFICATION_TEST");
+
     if (retry) {
-      self.scheduleUpdate(self.loaded ? -1 : self.config.retryDelay);
+     // self.scheduleUpdate(self.loaded ? -1 : self.config.retryDelay);
     }
   },
 
@@ -141,11 +122,11 @@ Module.register("snowbowl", {
     };
   },
 
-  processData: function(data) {
+  processData: function(report) {
     const startSearch = "<!-- BEGIN POLLING --";
     const endSearch = "-- END POLLING -->";
 
-    const reportObj = data
+    const reportObj = report
       .substring(
         report.indexOf(startSearch) + startSearch.length,
         report.indexOf(endSearch)
@@ -181,18 +162,12 @@ Module.register("snowbowl", {
       this.updateDom(this.config.animationSpeed);
     }
     this.loaded = true;
-
-    // the data if load
-    // send notification to helper
-    this.sendSocketNotification("snowbowl-NOTIFICATION_TEST", reportObj);
   },
 
   // socketNotificationReceived from helper
   socketNotificationReceived: function(notification, payload) {
     if (notification === "snowbowl-NOTIFICATION_TEST") {
-      // set dataNotification
-      this.dataNotification = payload;
-      this.updateDom();
+      this.processData(payload);
     }
   }
 });
