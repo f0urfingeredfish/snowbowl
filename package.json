@@ -1,18 +1,17 @@
 {
   "name": "snowbowl",
   "version": "1.0.0",
-  "description": "Todo: Insert description here!",
+  "description": "Get daily Snowbowl Montana snow report. Module for MagicMirror",
   "main": "snowbowl.js",
   "author": "Nick Kircos",
   "license": "MIT",
+  "scripts": {
+    "lint": "eslint --fix -- *.js",
+    "format": "prettier **.{js,css,json} --write"
+  },
   "devDependencies": {
-    "grunt": "latest",
-    "grunt-eslint": "latest",
-    "grunt-jsonlint": "latest",
-    "grunt-markdownlint": "^1.0.13",
-    "grunt-stylelint": "latest",
-    "grunt-yamllint": "latest",
-    "stylelint-config-standard": "latest",
-    "time-grunt": "latest"
+    "eslint": "^5.8.0",
+    "prettier": "^1.14.3",
+    "eslint-plugin-prettier": "^3.0.0"
   }
 }
