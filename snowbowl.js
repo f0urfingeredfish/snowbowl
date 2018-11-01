@@ -7,8 +7,6 @@
  * MIT Licensed.
  */
 
-
-
 Module.register("snowbowl", {
   defaults: {
     updateInterval: 60000,
@@ -51,7 +49,7 @@ Module.register("snowbowl", {
     this.sendSocketNotification("snowbowl-NOTIFICATION_TEST");
 
     if (retry) {
-     // self.scheduleUpdate(self.loaded ? -1 : self.config.retryDelay);
+      // self.scheduleUpdate(self.loaded ? -1 : self.config.retryDelay);
     }
   },
 
@@ -80,9 +78,12 @@ Module.register("snowbowl", {
     var wrapper = document.createElement("div");
     // If this.dataRequest is not empty
     if (this.dataRequest) {
-      var wrapperDataRequest = document.createElement("div");
-      // check format https://jsonplaceholder.typicode.com/posts/1
-      wrapperDataRequest.innerHTML = this.dataRequest.lastupdated;
+      var lastupdated = document.createElement("div");
+      lastupdated.innerHTML = this.dataRequest.lastupdated;
+      wrapper.style.fontSize = "1em";
+
+      var snowfall = document.createElement("div");
+      snowfall.innerHTML = this.dataRequest.newstormtotal;
 
       var labelDataRequest = document.createElement("label");
       // Use translate function
@@ -90,7 +91,8 @@ Module.register("snowbowl", {
       labelDataRequest.innerHTML = this.translate("TITLE");
 
       wrapper.appendChild(labelDataRequest);
-      wrapper.appendChild(wrapperDataRequest);
+      wrapper.appendChild(snowfall);
+      wrapper.appendChild(lastupdated);
     }
 
     // Data from helper
