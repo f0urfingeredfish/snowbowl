@@ -53,6 +53,8 @@ Module.register("snowbowl", {
   getDom() {
     var wrapper = document.createElement("div");
     wrapper.style.fontSize = "16px";
+    wrapper.style.lineHeight = "normal";
+    wrapper.style.maxWidth = "370px";
 
     if (this.dataRequest) {
       const {
@@ -74,8 +76,16 @@ Module.register("snowbowl", {
       } = this.dataRequest;
       var report = document.createElement("label");
       report.innerHTML = `
-      ${newstormtotal ? `Storm: ${newstormtotal}" </br>` : ""}
-      ${twentyFourHourTotal ? `24hr: ${twentyFourHourTotal}" </br>` : ""}
+      ${
+        newstormtotal
+          ? `Storm: ${newstormtotal}" <span class="wi weathericon wi-snow"></span></br>`
+          : ""
+      }
+      ${
+        twentyFourHourTotal
+          ? `24hr: ${twentyFourHourTotal}"<span class="wi weathericon wi-snow"></span> </br>`
+          : ""
+      }
       ${current_temp_base ? `Base Temp: ${current_temp_base}° </br>` : ""}
       ${current_weather_type ? `${current_weather_type} </br>` : ""}
       ${
@@ -84,9 +94,11 @@ Module.register("snowbowl", {
           : ""
       }
       ${
-        surface_depth_summit ? `Summit Depth: ${surface_depth_summit}</br>` : ""
+        surface_depth_summit
+          ? `Summit Depth: ${surface_depth_summit}" </br>`
+          : ""
       }
-      ${surface_depth_base ? `Base Depth: ${surface_depth_base}</br>` : ""}
+      ${surface_depth_base ? `Base Depth: ${surface_depth_base}" </br>` : ""}
       ${specialevents ? `Events: ${specialevents}</br>` : ""}
       ${comments ? `${comments}</br>` : ""}
       ${lastupdated}
