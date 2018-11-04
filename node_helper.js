@@ -29,10 +29,6 @@ const getHTML = url =>
     request.on("error", err => reject(err));
   });
 
-const getData = async function() {
-  return report;
-};
-
 module.exports = NodeHelper.create({
   // Override socketNotificationReceived method.
 
@@ -44,38 +40,12 @@ module.exports = NodeHelper.create({
 	 */
   socketNotificationReceived: async function(notification, payload) {
     if (notification === "snowbowl-GET_REPORT") {
-      console.log(
-        "Working notification system. Notification:",
-        notification,
-        "payload: ",
-        payload
-      );
       try {
         const report = await getHTML("https://montanasnowbowl.com/report.php3");
-        this.sendNotificationTest(report); //Is possible send objects :)
+        this.sendSocketNotification("snowbowl-GET_REPORT", payload);
       } catch (e) {
         Log.error(e);
       }
     }
-  },
-
-  // Example function send notification test
-  sendNotificationTest: function(payload) {
-    this.sendSocketNotification("snowbowl-GET_REPORT", payload);
-  },
-
-  // this you can create extra routes for your module
-  extraRoutes: function() {
-    var self = this;
-    this.expressApp.get("/snowbowl/extra_route", function(req, res) {
-      // call another function
-      values = self.anotherFunction();
-      res.send(values);
-    });
-  },
-
-  // Test another function
-  anotherFunction: function() {
-    return { date: new Date() };
   }
 });

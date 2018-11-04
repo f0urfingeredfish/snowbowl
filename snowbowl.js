@@ -15,19 +15,13 @@ Module.register("snowbowl", {
 
   requiresVersion: "2.1.0", // Required version of MagicMirror
 
-  start: function() {
-    var self = this;
-    var dataRequest = null;
-    var dataNotification = null;
-
+  start() {
     //Flag for check if module is loaded
     this.loaded = false;
 
     // Schedule update timer.
     this.getData();
-    setInterval(function() {
-      self.updateDom();
-    }, this.config.updateInterval);
+    setInterval(() => this.updateDom(), this.config.updateInterval);
   },
 
   /*
@@ -46,69 +40,81 @@ Module.register("snowbowl", {
 	 * argument delay number - Milliseconds before next update.
 	 *  If empty, this.config.updateInterval is used.
 	 */
-  scheduleUpdate: function(delay) {
+  scheduleUpdate(delay) {
     var nextLoad = this.config.updateInterval;
     if (typeof delay !== "undefined" && delay >= 0) {
       nextLoad = delay;
     }
     nextLoad = nextLoad;
-    var self = this;
-    setTimeout(function() {
-      self.getData();
-    }, nextLoad);
+
+    setTimeout(() => self.getData(), nextLoad);
   },
 
-  getDom: function() {
-    var self = this;
-
-    // create element wrapper for show into the module
+  getDom() {
     var wrapper = document.createElement("div");
-    // If this.dataRequest is not empty
+    wrapper.style.fontSize = "16px";
+
     if (this.dataRequest) {
-      var lastupdated = document.createElement("div");
-      lastupdated.innerHTML = this.dataRequest.lastupdated;
-      wrapper.style.fontSize = "16px";
+      const {
+        newstormtotal,
+        lastupdated,
+        "24hourtotal": twentyFourHourTotal,
+        current_temp_base,
+        current_weather_type,
+        operations_hoursofweekday,
+        operations_lifts,
+        operations_trails,
+        operations_peropen,
+        surface_condition_primary,
+        surface_condition_secondary,
+        surface_depth_base,
+        surface_depth_summit,
+        specialevents,
+        comments
+      } = this.dataRequest;
+      var report = document.createElement("label");
+      report.innerHTML = `
+      ${newstormtotal ? `Storm: ${newstormtotal}" </br>` : ""}
+      ${twentyFourHourTotal ? `24hr: ${twentyFourHourTotal}" </br>` : ""}
+      ${current_temp_base ? `Base Temp: ${current_temp_base}° </br>` : ""}
+      ${current_weather_type ? `${current_weather_type} </br>` : ""}
+      ${
+        operations_hoursofweekday
+          ? `Hours: ${operations_hoursofweekday}</br>`
+          : ""
+      }
+      ${
+        surface_depth_summit ? `Summit Depth: ${surface_depth_summit}</br>` : ""
+      }
+      ${surface_depth_base ? `Base Depth: ${surface_depth_base}</br>` : ""}
+      ${specialevents ? `Events: ${specialevents}</br>` : ""}
+      ${comments ? `${comments}</br>` : ""}
+      ${lastupdated}
+      `;
 
-      var labelDataRequest = document.createElement("label");
-      // Use translate function
-      //             this id defined in translations files
-      labelDataRequest.innerHTML =
-        "New storm total:" + this.dataRequest.newstormtotal + '"';
-
-      wrapper.appendChild(labelDataRequest);
-      wrapper.appendChild(lastupdated);
+      wrapper.appendChild(report);
     }
 
-    // Data from helper
-    if (this.dataNotification) {
-      var wrapperDataNotification = document.createElement("div");
-      // translations  + datanotification
-      wrapperDataNotification.innerHTML =
-        this.translate("UPDATE") + ": " + this.dataNotification.date;
-
-      wrapper.appendChild(wrapperDataNotification);
-    }
     return wrapper;
   },
 
-  getScripts: function() {
-    return [];
-  },
-
-  getStyles: function() {
-    return ["snowbowl.css"];
-  },
+  getScripts: () => [],
+  getStyles: () => ["snowbowl.css"],
 
   // Load translations files
-  getTranslations: function() {
-    //FIXME: This can be load a one file javascript definition
-    return {
-      en: "translations/en.json",
-      es: "translations/es.json"
-    };
+  getTranslations: () => ({
+    en: "translations/en.json",
+    es: "translations/es.json"
+  }),
+
+  // socketNotificationReceived from helper
+  socketNotificationReceived(notification, payload) {
+    if (notification === "snowbowl-GET_REPORT") {
+      this.processData(payload);
+    }
   },
 
-  processData: function(report) {
+  processData(report) {
     const startSearch = "<!-- BEGIN POLLING --";
     const endSearch = "-- END POLLING -->";
 
@@ -148,12 +154,5 @@ Module.register("snowbowl", {
       this.updateDom(this.config.animationSpeed);
     }
     this.loaded = true;
-  },
-
-  // socketNotificationReceived from helper
-  socketNotificationReceived: function(notification, payload) {
-    if (notification === "snowbowl-GET_REPORT") {
-      this.processData(payload);
-    }
   }
 });
