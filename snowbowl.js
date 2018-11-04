@@ -83,7 +83,7 @@ Module.register("snowbowl", {
       }
       ${
         twentyFourHourTotal
-          ? `24hr: ${twentyFourHourTotal}"<span class="wi weathericon wi-snow"></span> </br>`
+          ? `24hr: ${twentyFourHourTotal}" <span class="wi weathericon wi-snow"></span> </br>`
           : ""
       }
       ${current_temp_base ? `Base Temp: ${current_temp_base}° </br>` : ""}
