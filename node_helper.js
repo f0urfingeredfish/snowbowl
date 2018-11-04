@@ -43,7 +43,7 @@ module.exports = NodeHelper.create({
 	 * argument payload mixed - The payload of the notification.
 	 */
   socketNotificationReceived: async function(notification, payload) {
-    if (notification === "snowbowl-NOTIFICATION_TEST") {
+    if (notification === "snowbowl-GET_REPORT") {
       console.log(
         "Working notification system. Notification:",
         notification,
@@ -61,7 +61,7 @@ module.exports = NodeHelper.create({
 
   // Example function send notification test
   sendNotificationTest: function(payload) {
-    this.sendSocketNotification("snowbowl-NOTIFICATION_TEST", payload);
+    this.sendSocketNotification("snowbowl-GET_REPORT", payload);
   },
 
   // this you can create extra routes for your module

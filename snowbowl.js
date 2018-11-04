@@ -36,15 +36,8 @@ Module.register("snowbowl", {
 	 * get a URL request
 	 *
 	 */
-  getData: async function() {
-    var self = this;
-    var retry = true;
-   
-    this.sendSocketNotification("snowbowl-NOTIFICATION_TEST");
-
-    if (retry) {
-      // self.scheduleUpdate(self.loaded ? -1 : self.config.retryDelay);
-    }
+  getData() {
+    this.sendSocketNotification("snowbowl-GET_REPORT");
   },
 
   /* scheduleUpdate()
@@ -79,7 +72,8 @@ Module.register("snowbowl", {
       var labelDataRequest = document.createElement("label");
       // Use translate function
       //             this id defined in translations files
-      labelDataRequest.innerHTML = "New storm total:" + this.dataRequest.newstormtotal +'"';
+      labelDataRequest.innerHTML =
+        "New storm total:" + this.dataRequest.newstormtotal + '"';
 
       wrapper.appendChild(labelDataRequest);
       wrapper.appendChild(lastupdated);
@@ -158,7 +152,7 @@ Module.register("snowbowl", {
 
   // socketNotificationReceived from helper
   socketNotificationReceived: function(notification, payload) {
-    if (notification === "snowbowl-NOTIFICATION_TEST") {
+    if (notification === "snowbowl-GET_REPORT") {
       this.processData(payload);
     }
   }
