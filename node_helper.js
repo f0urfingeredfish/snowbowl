@@ -42,7 +42,7 @@ module.exports = NodeHelper.create({
     if (notification === "snowbowl-GET_REPORT") {
       try {
         const report = await getHTML("https://montanasnowbowl.com/report.php3");
-        this.sendSocketNotification("snowbowl-GET_REPORT", payload);
+        this.sendSocketNotification("snowbowl-GET_REPORT", report);
       } catch (e) {
         Log.error(e);
       }
