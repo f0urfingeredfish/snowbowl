@@ -39,13 +39,7 @@ Module.register("snowbowl", {
   getData: async function() {
     var self = this;
     var retry = true;
-    try {
-      const report = await getHTML("https://montanasnowbowl.com/report.php3");
-    } catch (e) {
-      self.updateDom(self.config.animationSpeed);
-      Log.error(self.name, this.status);
-      retry = false;
-    }
+   
     this.sendSocketNotification("snowbowl-NOTIFICATION_TEST");
 
     if (retry) {
@@ -80,18 +74,14 @@ Module.register("snowbowl", {
     if (this.dataRequest) {
       var lastupdated = document.createElement("div");
       lastupdated.innerHTML = this.dataRequest.lastupdated;
-      wrapper.style.fontSize = "1em";
-
-      var snowfall = document.createElement("div");
-      snowfall.innerHTML = this.dataRequest.newstormtotal;
+      wrapper.style.fontSize = "16px";
 
       var labelDataRequest = document.createElement("label");
       // Use translate function
       //             this id defined in translations files
-      labelDataRequest.innerHTML = this.translate("TITLE");
+      labelDataRequest.innerHTML = "New storm total:" + this.dataRequest.newstormtotal +'"';
 
       wrapper.appendChild(labelDataRequest);
-      wrapper.appendChild(snowfall);
       wrapper.appendChild(lastupdated);
     }
 
