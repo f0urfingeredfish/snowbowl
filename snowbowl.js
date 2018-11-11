@@ -78,30 +78,26 @@ Module.register("snowbowl", {
       report.innerHTML = `
       ${
         newstormtotal
-          ? `Storm: ${newstormtotal}" <span class="wi weathericon wi-snow"></span></br>`
+          ? `<span class="wi weathericon wi-snow"></span> Storm ${newstormtotal}" </br>`
           : ""
       }
       ${
         twentyFourHourTotal
-          ? `24hr: ${twentyFourHourTotal}" <span class="wi weathericon wi-snow"></span> </br>`
+          ? `24hr ${twentyFourHourTotal}" <span class="wi weathericon wi-snow"></span> </br>`
           : ""
       }
-      ${current_temp_base ? `Base Temp: ${current_temp_base}° </br>` : ""}
+      ${current_temp_base ? `Base ${current_temp_base}° </br>` : ""}
       ${current_weather_type ? `${current_weather_type} </br>` : ""}
       ${
         operations_hoursofweekday
-          ? `Hours: ${operations_hoursofweekday}</br>`
+          ? `Hours ${operations_hoursofweekday}</br>`
           : ""
       }
-      ${
-        surface_depth_summit
-          ? `Summit Depth: ${surface_depth_summit}" </br>`
-          : ""
-      }
-      ${surface_depth_base ? `Base Depth: ${surface_depth_base}" </br>` : ""}
+      ${surface_depth_summit ? `Summit ${surface_depth_summit}" </br>` : ""}
+      ${surface_depth_base ? `Base ${surface_depth_base}" </br>` : ""}
       ${specialevents ? `Events: ${specialevents}</br>` : ""}
       ${comments ? `${comments}</br>` : ""}
-      ${lastupdated}
+      ${`<span style="font-size: 12px;">${lastupdated}</span>`}
       `;
 
       wrapper.appendChild(report);
