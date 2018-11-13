@@ -188,9 +188,9 @@ Module.register("snowbowl", {
     }, {});
     console.log("parsed disco", reportObj);
     this.discoReportJson = reportObj;
-    if (this.loaded === false) {
+    // if (this.loaded === false) {
       this.updateDom(this.config.animationSpeed);
-    }
+    // }
     this.loaded = true;
   }
 });
