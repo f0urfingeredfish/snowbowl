@@ -154,7 +154,7 @@ Module.register("snowbowl", {
           ? `<span class="wi weathericon wi-snow"></span> 24hr ${snow24}" </br>`
           : ""
       }
-      ${Number(current_temp_base) ? `Base ${tempCurrent}° </br>` : ""}
+      ${Number(tempCurrent) ? `Base ${tempCurrent}° </br>` : ""}
       ${weather ? `${weather} </br>` : ""}
       ${liftsOpen ? `Lifts ${liftsOpen}</br>` : ""}
       ${trails ? `Trails ${trails}</br>` : ""}
@@ -271,8 +271,7 @@ Module.register("snowbowl", {
       "Surface Conditions (Primary)": surfacePrimary,
       "Surface Conditions (Secondary)": surfaceSecondary,
       "Terrain Open": terrainOpen,
-      "Trails Open": trails,
-      lastUpdated
+      "Trails Open": trails
     } = reportObj;
     this.discoReportJson = {
       tempCurrent,
