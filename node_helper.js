@@ -49,7 +49,7 @@ module.exports = NodeHelper.create({
 
       try {
         const report = await getHTML(
-          "https://www.skidiscovery.com/snow-report"
+          "https://www.skidiscovery.com/snow-report/"
         );
         this.sendSocketNotification("snowbowl-GET_REPORT_DISCO", report);
       } catch (e) {

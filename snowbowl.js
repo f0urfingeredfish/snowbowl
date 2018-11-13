@@ -173,7 +173,8 @@ Module.register("snowbowl", {
   },
 
   processDiscoData(reportHtml) {
-    const parsingDiv = document.createElement("div");
+    const newHTMLDocument = document.implementation.createHTMLDocument('preview');
+    const parsingDiv = newHTMLDocument.createElement('div').innerHTML = reportHtml;
     parsingDiv.innerHTML = reportHtml;
     const rows = [].slice.call(
       parsingDiv.querySelector(".main-tile .main-content").children
@@ -188,9 +189,9 @@ Module.register("snowbowl", {
     }, {});
     console.log("parsed disco", reportObj);
     this.discoReportJson = reportObj;
-    // if (this.loaded === false) {
+    if (this.loaded === false) {
       this.updateDom(this.config.animationSpeed);
-    // }
+    }
     this.loaded = true;
   }
 });
