@@ -9,7 +9,7 @@
 
 Module.register("snowbowl", {
   defaults: {
-    updateInterval: 60000,
+    updateInterval: 60 * 1000,
     retryDelay: 5000
   },
 
@@ -18,6 +18,7 @@ Module.register("snowbowl", {
   start() {
     //Flag for check if module is loaded
     this.loaded = false;
+    this.isDisplayingSnowBowl = false;
 
     // Schedule update timer.
     this.getData();
@@ -49,8 +50,12 @@ Module.register("snowbowl", {
 
     setTimeout(() => self.getData(), nextLoad);
   },
-
   getDom() {
+    return this.isDisplayingSnowBowl
+      ? this.getDiscoDom()
+      : this.getSnowBowlDom();
+  },
+  getSnowBowlDom() {
     var wrapper = document.createElement("div");
     wrapper.style.fontSize = "16px";
     wrapper.style.lineHeight = "normal";
@@ -76,6 +81,7 @@ Module.register("snowbowl", {
       } = this.snowbowlReportJson;
       var report = document.createElement("label");
       report.innerHTML = `
+      <div>Snowbowl</div>
       ${
         Number(newstormtotal)
           ? `<span class="wi weathericon wi-snow"></span> Storm ${newstormtotal}" </br>`
@@ -102,12 +108,66 @@ Module.register("snowbowl", {
       ${specialevents ? `Events: ${specialevents}</br>` : ""}
       ${comments ? `${comments}</br>` : ""}
       ${`<span style="font-size: 12px;">${lastupdated}</span>`}
-      ${this.discoReportJson ? this.discoReportJson.toString() : ""}
       `;
 
       wrapper.appendChild(report);
     }
+    this.isDisplayingSnowBowl = true;
+    return wrapper;
+  },
 
+  getDiscoDom() {
+    var wrapper = document.createElement("div");
+    wrapper.style.fontSize = "16px";
+    wrapper.style.lineHeight = "normal";
+    wrapper.style.maxWidth = "370px";
+
+    if (this.snowbowlReportJson) {
+      const {
+        tempCurrent,
+        weather,
+        wind,
+        liftsOpen,
+        newSnow,
+        snow24,
+        snow48,
+        snow72,
+        snowDepthBottom,
+        snowDepthTop,
+        snowYTD,
+        surfacePrimary,
+        surfaceSecondary,
+        terrainOpen,
+        trails,
+        lastUpdated
+      } = this.snowbowlReportJson;
+      var report = document.createElement("div");
+      report.innerHTML = `
+      <div>Discovery</div>
+      ${
+        Number(newSnow)
+          ? `<span class="wi weathericon wi-snow"></span> Storm ${newSnow}" </br>`
+          : ""
+      }
+      ${
+        Number(snow24)
+          ? `<span class="wi weathericon wi-snow"></span> 24hr ${snow24}" </br>`
+          : ""
+      }
+      ${Number(current_temp_base) ? `Base ${tempCurrent}° </br>` : ""}
+      ${weather ? `${weather} </br>` : ""}
+      ${liftsOpen ? `Lifts ${liftsOpen}</br>` : ""}
+      ${trails ? `Trails ${trails}</br>` : ""}
+      ${Number(snowDepthTop) ? `Summit ${snowDepthTop}" </br>` : ""}
+      ${Number(snowDepthBottom) ? `Base ${snowDepthBottom}" </br>` : ""}
+      ${surfacePrimary ? `Surface: ${surfacePrimary}</br>` : ""}
+      
+      ${`<span style="font-size: 12px;">${lastUpdated}</span>`}
+      `;
+
+      wrapper.appendChild(report);
+    }
+    this.isDisplayingSnowBowl = false;
     return wrapper;
   },
 
@@ -178,8 +238,9 @@ Module.register("snowbowl", {
     );
     const parsingDiv = newHTMLDocument.createElement("div");
     parsingDiv.innerHTML = reportHtml;
-    const lastUpdated = parsingDiv.querySelector("#non-tabbing-tab > span")
-      .innerText;
+    const lastUpdated = parsingDiv
+      .querySelector("#non-tabbing-tab > span")
+      .innerText.replace("Updated: ", "");
     const rows = [].slice.call(
       parsingDiv.querySelector(".main-tile .main-content").children
     );
@@ -194,8 +255,44 @@ Module.register("snowbowl", {
       },
       { lastUpdated }
     );
-    console.log("parsed disco", reportObj);
-    this.discoReportJson = reportObj;
+
+    const {
+      "Current Temperature": tempCurrent,
+      "Current Weather": weather,
+      "Current Wind": wind,
+      "Lifts Open": liftsOpen,
+      "New Snow (since lifts closed)": newSnow,
+      "New Snow, 24 hours": snow24,
+      "New Snow, 48 hours": snow48,
+      "New Snow, 72 hours": snow72,
+      "Snow Depth - Bottom": snowDepthBottom,
+      "Snow Depth - Top": snowDepthTop,
+      "Snowfall, YTD": snowYTD,
+      "Surface Conditions (Primary)": surfacePrimary,
+      "Surface Conditions (Secondary)": surfaceSecondary,
+      "Terrain Open": terrainOpen,
+      "Trails Open": trails,
+      lastUpdated
+    } = reportObj;
+    this.discoReportJson = {
+      tempCurrent,
+      weather,
+      wind,
+      liftsOpen,
+      newSnow,
+      snow24,
+      snow48,
+      snow72,
+      snowDepthBottom,
+      snowDepthTop,
+      snowYTD,
+      surfacePrimary,
+      surfaceSecondary,
+      terrainOpen,
+      trails,
+      lastUpdated
+    };
+    console.log("parsed disco", this.discoReportJson);
     if (this.loaded === false) {
       this.updateDom(this.config.animationSpeed);
     }
