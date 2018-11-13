@@ -122,7 +122,7 @@ Module.register("snowbowl", {
     wrapper.style.lineHeight = "normal";
     wrapper.style.maxWidth = "370px";
 
-    if (this.snowbowlReportJson) {
+    if (this.discoReportJson) {
       const {
         tempCurrent,
         weather,
@@ -140,7 +140,7 @@ Module.register("snowbowl", {
         terrainOpen,
         trails,
         lastUpdated
-      } = this.snowbowlReportJson;
+      } = this.discoReportJson;
       var report = document.createElement("div");
       report.innerHTML = `
       <div>Discovery</div>
