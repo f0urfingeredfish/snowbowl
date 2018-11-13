@@ -174,7 +174,7 @@ Module.register("snowbowl", {
 
   processDiscoData(reportHtml) {
     const newHTMLDocument = document.implementation.createHTMLDocument('preview');
-    const parsingDiv = newHTMLDocument.createElement('div').innerHTML = reportHtml;
+    const parsingDiv = newHTMLDocument.createElement('div');
     parsingDiv.innerHTML = reportHtml;
     const rows = [].slice.call(
       parsingDiv.querySelector(".main-tile .main-content").children
