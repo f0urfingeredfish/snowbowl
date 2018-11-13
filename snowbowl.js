@@ -226,9 +226,9 @@ Module.register("snowbowl", {
     // comments: 'Ski Shop Open House and Sale is coming up!  Saturday and Sunday, October 13 and 14, noon to 4:30 pm.' }
 
     this.snowbowlReportJson = reportObj;
-    if (this.loaded === false) {
+    // if (this.loaded === false) {
       this.updateDom(this.config.animationSpeed);
-    }
+    // }
     this.loaded = true;
   },
 
@@ -292,9 +292,9 @@ Module.register("snowbowl", {
       lastUpdated
     };
     console.log("parsed disco", this.discoReportJson);
-    if (this.loaded === false) {
+    // if (this.loaded === false) {
       this.updateDom(this.config.animationSpeed);
-    }
+    // }
     this.loaded = true;
   }
 });
