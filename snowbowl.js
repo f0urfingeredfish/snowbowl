@@ -173,20 +173,27 @@ Module.register("snowbowl", {
   },
 
   processDiscoData(reportHtml) {
-    const newHTMLDocument = document.implementation.createHTMLDocument('preview');
-    const parsingDiv = newHTMLDocument.createElement('div');
+    const newHTMLDocument = document.implementation.createHTMLDocument(
+      "preview"
+    );
+    const parsingDiv = newHTMLDocument.createElement("div");
     parsingDiv.innerHTML = reportHtml;
+    const lastUpdated = parsingDiv.querySelector("#non-tabbing-tab > span")
+      .innerText;
     const rows = [].slice.call(
       parsingDiv.querySelector(".main-tile .main-content").children
     );
 
-    const reportObj = rows.reduce((prev, row) => {
-      const [key, val] = row.children;
-      if (key.innerText) {
-        prev[key.innerText] = val.innerText;
-      }
-      return prev;
-    }, {});
+    const reportObj = rows.reduce(
+      (prev, row) => {
+        const [key, val] = row.children;
+        if (key.innerText) {
+          prev[key.innerText] = val.innerText;
+        }
+        return prev;
+      },
+      { lastUpdated }
+    );
     console.log("parsed disco", reportObj);
     this.discoReportJson = reportObj;
     if (this.loaded === false) {
