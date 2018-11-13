@@ -56,7 +56,7 @@ Module.register("snowbowl", {
     wrapper.style.lineHeight = "normal";
     wrapper.style.maxWidth = "370px";
 
-    if (this.dataRequest) {
+    if (this.snowbowlReportJson) {
       const {
         newstormtotal,
         lastupdated,
@@ -73,7 +73,7 @@ Module.register("snowbowl", {
         surface_depth_summit,
         specialevents,
         comments
-      } = this.dataRequest;
+      } = this.snowbowlReportJson;
       var report = document.createElement("label");
       report.innerHTML = `
       ${
@@ -102,6 +102,7 @@ Module.register("snowbowl", {
       ${specialevents ? `Events: ${specialevents}</br>` : ""}
       ${comments ? `${comments}</br>` : ""}
       ${`<span style="font-size: 12px;">${lastupdated}</span>`}
+      ${this.discoReportJson ? this.discoReportJson.toString() : ""}
       `;
 
       wrapper.appendChild(report);
@@ -122,11 +123,14 @@ Module.register("snowbowl", {
   // socketNotificationReceived from helper
   socketNotificationReceived(notification, payload) {
     if (notification === "snowbowl-GET_REPORT") {
-      this.processData(payload);
+      this.processSnowbowlData(payload);
+    }
+    if (notification === "snowbowl-GET_REPORT_DISCO") {
+      this.processDiscoData(payload);
     }
   },
 
-  processData(report) {
+  processSnowbowlData(report) {
     const startSearch = "<!-- BEGIN POLLING --";
     const endSearch = "-- END POLLING -->";
 
@@ -161,7 +165,29 @@ Module.register("snowbowl", {
     // specialevents: '',
     // comments: 'Ski Shop Open House and Sale is coming up!  Saturday and Sunday, October 13 and 14, noon to 4:30 pm.' }
 
-    this.dataRequest = reportObj;
+    this.snowbowlReportJson = reportObj;
+    if (this.loaded === false) {
+      this.updateDom(this.config.animationSpeed);
+    }
+    this.loaded = true;
+  },
+
+  processDiscoData(reportHtml) {
+    const parsingDiv = document.createElement("div");
+    parsingDiv.innerHTML = reportHtml;
+    const rows = [].slice.call(
+      parsingDiv.querySelector(".main-tile .main-content").children
+    );
+
+    const reportObj = rows.reduce((prev, row) => {
+      const [key, val] = row.children;
+      if (key.innerText) {
+        prev[key.innerText] = val.innerText;
+      }
+      return prev;
+    }, {});
+    console.log("parsed disco", reportObj);
+    this.discoReportJson = reportObj;
     if (this.loaded === false) {
       this.updateDom(this.config.animationSpeed);
     }

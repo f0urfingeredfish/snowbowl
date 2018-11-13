@@ -46,6 +46,15 @@ module.exports = NodeHelper.create({
       } catch (e) {
         Log.error(e);
       }
+
+      try {
+        const report = await getHTML(
+          "https://www.skidiscovery.com/snow-report"
+        );
+        this.sendSocketNotification("snowbowl-GET_REPORT_DISCO", report);
+      } catch (e) {
+        Log.error(e);
+      }
     }
   }
 });
