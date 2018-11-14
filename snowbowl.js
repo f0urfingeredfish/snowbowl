@@ -154,6 +154,16 @@ Module.register("snowbowl", {
           ? `<span class="wi weathericon wi-snow"></span> 24hr ${snow24}" </br>`
           : ""
       }
+      ${
+        Number(snow48)
+          ? `<span class="wi weathericon wi-snow"></span> 48hr ${snow48}" </br>`
+          : ""
+      }
+      ${
+        Number(snow72)
+          ? `<span class="wi weathericon wi-snow"></span> 72hr ${snow72}" </br>`
+          : ""
+      }
       ${Number(tempCurrent) ? `Base ${tempCurrent}° </br>` : ""}
       ${weather ? `${weather} </br>` : ""}
       ${liftsOpen ? `Lifts ${liftsOpen}</br>` : ""}
@@ -161,7 +171,7 @@ Module.register("snowbowl", {
       ${Number(snowDepthTop) ? `Summit ${snowDepthTop}" </br>` : ""}
       ${Number(snowDepthBottom) ? `Base ${snowDepthBottom}" </br>` : ""}
       ${surfacePrimary ? `Surface: ${surfacePrimary}</br>` : ""}
-      
+
       ${`<span style="font-size: 12px;">${lastUpdated}</span>`}
       `;
 
