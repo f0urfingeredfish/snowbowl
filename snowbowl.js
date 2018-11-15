@@ -10,6 +10,7 @@
 Module.register("snowbowl", {
   defaults: {
     updateInterval: 60 * 1000,
+    fetchReportInterval: 1000 * 60 * 60,
     retryDelay: 5000
   },
 
@@ -42,7 +43,7 @@ Module.register("snowbowl", {
 	 *  If empty, this.config.updateInterval is used.
 	 */
   scheduleUpdate(delay) {
-    var nextLoad = this.config.updateInterval;
+    var nextLoad = this.config.fetchReportInterval;
     if (typeof delay !== "undefined" && delay >= 0) {
       nextLoad = delay;
     }
@@ -144,6 +145,8 @@ Module.register("snowbowl", {
       var report = document.createElement("div");
       report.innerHTML = `
       <div>Discovery</div>
+      ${weather ? `${weather} </br>` : ""}
+      ${Number(tempCurrent) ? `Base ${tempCurrent}° </br>` : ""}
       ${
         Number(newSnow)
           ? `<span class="wi weathericon wi-snow"></span> Storm ${newSnow}" </br>`
@@ -164,14 +167,11 @@ Module.register("snowbowl", {
           ? `<span class="wi weathericon wi-snow"></span> 72hr ${snow72}" </br>`
           : ""
       }
-      ${Number(tempCurrent) ? `Base ${tempCurrent}° </br>` : ""}
-      ${weather ? `${weather} </br>` : ""}
-      ${liftsOpen ? `Lifts ${liftsOpen}</br>` : ""}
-      ${trails ? `Trails ${trails}</br>` : ""}
       ${Number(snowDepthTop) ? `Summit ${snowDepthTop}" </br>` : ""}
       ${Number(snowDepthBottom) ? `Base ${snowDepthBottom}" </br>` : ""}
       ${surfacePrimary ? `Surface: ${surfacePrimary}</br>` : ""}
-
+      ${liftsOpen ? `Lifts ${liftsOpen}</br>` : ""}
+      ${trails ? `Trails ${trails}</br>` : ""}
       ${`<span style="font-size: 12px;">${lastUpdated}</span>`}
       `;
 
@@ -236,10 +236,8 @@ Module.register("snowbowl", {
     // comments: 'Ski Shop Open House and Sale is coming up!  Saturday and Sunday, October 13 and 14, noon to 4:30 pm.' }
 
     this.snowbowlReportJson = reportObj;
-    // if (this.loaded === false) {
-      this.updateDom(this.config.animationSpeed);
-    // }
-    this.loaded = true;
+
+    this.updateDom(this.config.animationSpeed);
   },
 
   processDiscoData(reportHtml) {
@@ -301,10 +299,7 @@ Module.register("snowbowl", {
       trails,
       lastUpdated
     };
-    console.log("parsed disco", this.discoReportJson);
-    // if (this.loaded === false) {
-      this.updateDom(this.config.animationSpeed);
-    // }
-    this.loaded = true;
+
+    this.updateDom(this.config.animationSpeed);
   }
 });
