@@ -306,7 +306,7 @@ Module.register("snowbowl", {
     this.updateDom(this.config.animationSpeed);
   },
 
-  processLostData() {
+  processLostData(reportHtml) {
     const newHTMLDocument = document.implementation.createHTMLDocument(
       "losttrail"
     );
