@@ -198,6 +198,9 @@ Module.register("snowbowl", {
     if (notification === "snowbowl-GET_REPORT_DISCO") {
       this.processDiscoData(payload);
     }
+    if (notification === "snowbowl-GET_REPORT_LOST") {
+      this.processLostData(payload);
+    }
   },
 
   processSnowbowlData(report) {
@@ -301,5 +304,72 @@ Module.register("snowbowl", {
     };
 
     this.updateDom(this.config.animationSpeed);
+  },
+
+  processLostData() {
+    const newHTMLDocument = document.implementation.createHTMLDocument(
+      "losttrail"
+    );
+    const parsingDiv = newHTMLDocument.createElement("div");
+    parsingDiv.innerHTML = reportHtml;
+    const lastUpdated = parsingDiv
+      .querySelector(
+        "#content > div > div > div > article > div > div:nth-child(1) > div > div > div > div.vc_message_box.vc_message_box-standard.vc_message_box-rounded.vc_color-info > p:nth-child(3)"
+      )
+      .innerText.split("@")[1]
+      .replace(")", "");
+    const rows = [].slice.call(
+      parsingDiv.querySelector("#t9 > tbody").children
+    );
+
+    const reportObj = rows.reduce(
+      (prev, row) => {
+        const [key, val] = row.children;
+        if (key.innerText) {
+          prev[key.innerText] = val.innerText;
+        }
+        return prev;
+      },
+      { lastUpdated }
+    );
+
+    console.log("lost:", reportObj);
+    // const {
+    //   "Current Temperature": tempCurrent,
+    //   "Current Weather": weather,
+    //   "Current Wind": wind,
+    //   "Lifts Open": liftsOpen,
+    //   "New Snow (since lifts closed)": newSnow,
+    //   "New Snow, 24 hours": snow24,
+    //   "New Snow, 48 hours": snow48,
+    //   "New Snow, 72 hours": snow72,
+    //   "Snow Depth - Bottom": snowDepthBottom,
+    //   "Snow Depth - Top": snowDepthTop,
+    //   "Snowfall, YTD": snowYTD,
+    //   "Surface Conditions (Primary)": surfacePrimary,
+    //   "Surface Conditions (Secondary)": surfaceSecondary,
+    //   "Terrain Open": terrainOpen,
+    //   "Trails Open": trails
+    // } = reportObj;
+    // this.discoReportJson = {
+    //   tempCurrent,
+    //   weather,
+    //   wind,
+    //   liftsOpen,
+    //   newSnow,
+    //   snow24,
+    //   snow48,
+    //   snow72,
+    //   snowDepthBottom,
+    //   snowDepthTop,
+    //   snowYTD,
+    //   surfacePrimary,
+    //   surfaceSecondary,
+    //   terrainOpen,
+    //   trails,
+    //   lastUpdated
+    // };
+
+    // this.updateDom(this.config.animationSpeed);
   }
 });

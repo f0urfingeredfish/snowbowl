@@ -55,6 +55,12 @@ module.exports = NodeHelper.create({
       } catch (e) {
         Log.error(e);
       }
+      try {
+        const report = await getHTML("https://www.losttrail.com/snow-report/");
+        this.sendSocketNotification("snowbowl-GET_REPORT_LOST", report);
+      } catch (e) {
+        Log.error(e);
+      }
     }
   }
 });
