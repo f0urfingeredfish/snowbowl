@@ -46,14 +46,8 @@ Module.register("snowbowl", {
 	 * argument delay number - Milliseconds before next update.
 	 *  If empty, this.config.updateInterval is used.
 	 */
-  scheduleUpdate(delay) {
-    var nextLoad = this.config.fetchReportInterval;
-    if (typeof delay !== "undefined" && delay >= 0) {
-      nextLoad = delay;
-    }
-    nextLoad = nextLoad;
-
-    setTimeout(() => self.getData(), nextLoad);
+  scheduleUpdate() {
+    setTimeout(() => self.getData(), this.config.fetchReportInterval);
   },
   getDom() {
     if (this.currentReportShowing === SNOWBOWL_REPORT && this.discoReportJson) {
