@@ -315,7 +315,13 @@ Module.register("snowbowl", {
     );
     const parsingDiv = newHTMLDocument.createElement("div");
     parsingDiv.innerHTML = reportHtml;
-    const lastUpdated = parsingDiv
+    const lastUpdatedEl = parsingDiv.querySelector("#non-tabbing-tab > span");
+    if (!lastUpdatedEl) {
+      console.warn("Can't parse Discovery report", reportHtml);
+      this.discoReportJson = null;
+      return;
+    }
+    const lastUpdated = lastUpdatedEl
       .querySelector("#non-tabbing-tab > span")
       .innerText.replace("Updated: ", "");
     const rows = [].slice.call(
@@ -378,12 +384,15 @@ Module.register("snowbowl", {
     );
     const parsingDiv = newHTMLDocument.createElement("div");
     parsingDiv.innerHTML = reportHtml;
-    const lastUpdated = parsingDiv
-      .querySelector(
-        "#content > div > div > div > article > div > div:nth-child(1) > div > div > div > div.vc_message_box.vc_message_box-standard.vc_message_box-rounded.vc_color-info > p:nth-child(3)"
-      )
-      .innerText.split("@")[1]
-      .replace(")", "");
+    const lastUpdatedEl = parsingDiv.querySelector(
+      "#content > div > div > div > article > div > div:nth-child(1) > div > div > div > div.vc_message_box.vc_message_box-standard.vc_message_box-rounded.vc_color-info > p:nth-child(3)"
+    );
+    if (!lastUpdatedEl) {
+      console.warn("Can't parse lost trail report", reportHtml);
+      this.lostReportJson = null;
+      return;
+    }
+    const lastUpdated = lastUpdatedEl.innerText.split("@")[1].replace(")", "");
     const rows = [].slice.call(
       parsingDiv.querySelector("#t9 > tbody").children
     );
