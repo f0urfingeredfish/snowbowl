@@ -58,18 +58,11 @@ module.exports = NodeHelper.create({
         console.error(e);
       }
       try {
-        console.error("get losr trail");
-        const { stdout, stderr } = await exec(
-          "curl 'https://www.losttrail.com/snow-report/' -H 'authority: www.losttrail.com' -H 'pragma: no-cache' -H 'cache-control: no-cache' -H 'upgrade-insecure-requests: 1' -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.102 Safari/537.36' -H 'dnt: 1' -H 'accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8' -H 'referer: https://www.losttrail.com/' -H 'accept-encoding: gzip, deflate, br' -H 'accept-language: en-US,en;q=0.9' -H 'cookie: PHPSESSID=fj63rlp29ogot5tbcjsrmcev02; wcp_useroptions_id=9a66350fb22ae9459b26a24a1df4bfc15befb463d85e55.61366257; visid_incap_1728444=bHAfANHZQOeM0K8OENIuI2G071sAAAAAQUIPAAAAAABB6dYV/I+qwBHZxoBJ/hFM; incap_ses_207_1728444=E3AGL44rO1sXGDOq22nfAmO071sAAAAAZN/Z3eGilflDPIJND3hRNg==; _fbp=fb.1.1542435944295.173978093; vchideactivationmsg=1; vchideactivationmsg_vc11=5.5.5' --compressed"
+        const response = await exec(
+          "curl 'https://www.losttrail.com/snow-report/' -H 'authority: www.losttrail.com' -H 'pragma: no-cache' -H 'cache-control: no-cache' -H 'upgrade-insecure-requests: 1' -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.102 Safari/537.36' -H 'dnt: 1' -H 'accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8' -H 'referer: https://www.losttrail.com/snow-report/' -H 'accept-encoding: gzip, deflate, br' -H 'accept-language: en-US,en;q=0.9' -H 'cookie: PHPSESSID=fj63rlp29ogot5tbcjsrmcev02; wcp_useroptions_id=9a66350fb22ae9459b26a24a1df4bfc15befb463d85e55.61366257; vchideactivationmsg=1; vchideactivationmsg_vc11=5.5.5; incap_ses_207_1728444=91VVWlYxbQoC7Ker22nfApvG8FsAAAAAupAGsMckI5kQZxJMa+Yt0w==; visid_incap_1728444=bHAfANHZQOeM0K8OENIuI2G071sAAAAAQkIPAAAAAACAlEeIAUiuSWdisiAXjgWEnlnR8Lheocnl; _fbp=fb.1.1542506176533.1373202190' --compressed"
         );
-        console.error("got lost trail", stderr, stdout);
-        // const report = await getHTML("https://www.losttrail.com/snow-report/");
-        if (stdout) {
-          this.sendSocketNotification("snowbowl-GET_REPORT_LOST", stdout);
-        }
-        if (stderr) {
-          this.sendSocketNotification("snowbowl-GET_REPORT_LOST_ERROR", stderr);
-        }
+
+        this.sendSocketNotification("snowbowl-GET_REPORT_LOST", response);
       } catch (e) {
         console.error(e);
         this.sendSocketNotification("snowbowl-GET_REPORT_LOST_ERROR", e);
