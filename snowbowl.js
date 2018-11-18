@@ -201,6 +201,9 @@ Module.register("snowbowl", {
     if (notification === "snowbowl-GET_REPORT_LOST") {
       this.processLostData(payload);
     }
+    if (notification === "snowbowl-GET_REPORT_LOST_ERROR") {
+      console.error("snowbowl-GET_REPORT_LOST_ERROR", payload);
+    }
   },
 
   processSnowbowlData(report) {
