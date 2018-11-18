@@ -70,6 +70,7 @@ module.exports = NodeHelper.create({
         }
       } catch (e) {
         Log.error(e);
+        this.sendSocketNotification("snowbowl-GET_REPORT_LOST_ERROR", e);
       }
     }
   }
