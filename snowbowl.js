@@ -7,6 +7,10 @@
  * MIT Licensed.
  */
 
+const SNOWBOWL_REPORT = "snowbowl-report";
+const DISCO_REPORT = "disco-report";
+const LOST_TRAIL_REPORT = "lost-trail-report";
+
 Module.register("snowbowl", {
   defaults: {
     updateInterval: 60 * 1000,
@@ -19,7 +23,7 @@ Module.register("snowbowl", {
   start() {
     //Flag for check if module is loaded
     this.loaded = false;
-    this.isDisplayingSnowBowl = false;
+    this.currentReportShowing = LOST_TRAIL_REPORT;
 
     // Schedule update timer.
     this.getData();
@@ -52,9 +56,14 @@ Module.register("snowbowl", {
     setTimeout(() => self.getData(), nextLoad);
   },
   getDom() {
-    return this.isDisplayingSnowBowl
-      ? this.getDiscoDom()
-      : this.getSnowBowlDom();
+    switch (this.currentReportShowing) {
+      case SNOWBOWL_REPORT:
+        return this.getDiscoDom();
+      case DISCO_REPORT:
+        return this.getLostDom();
+      case LOST_TRAIL_REPORT:
+        return this.getSnowBowlDom();
+    }
   },
   getSnowBowlDom() {
     var wrapper = document.createElement("div");
@@ -113,7 +122,7 @@ Module.register("snowbowl", {
 
       wrapper.appendChild(report);
     }
-    this.isDisplayingSnowBowl = true;
+    this.currentReportShowing = SNOWBOWL_REPORT;
     return wrapper;
   },
 
@@ -177,7 +186,61 @@ Module.register("snowbowl", {
 
       wrapper.appendChild(report);
     }
-    this.isDisplayingSnowBowl = false;
+    this.currentReportShowing = DISCO_REPORT;
+    return wrapper;
+  },
+
+  getLostDom() {
+    var wrapper = document.createElement("div");
+    wrapper.style.fontSize = "16px";
+    wrapper.style.lineHeight = "normal";
+    wrapper.style.maxWidth = "370px";
+
+    if (this.lostReportJson) {
+      const {
+        newSnow,
+        snow24,
+        snow48,
+        snow72,
+        snowDepthBottom,
+        snowDepthTop,
+        snowYTD,
+        lastUpdated
+      } = this.lostReportJson;
+      var report = document.createElement("div");
+      report.innerHTML = `
+      <div>Lost Trail</div>
+
+
+      ${
+        Number(newSnow)
+          ? `<span class="wi weathericon wi-snow"></span> Storm ${newSnow}" </br>`
+          : ""
+      }
+      ${
+        Number(snow24)
+          ? `<span class="wi weathericon wi-snow"></span> 24hr ${snow24}" </br>`
+          : ""
+      }
+      ${
+        Number(snow48)
+          ? `<span class="wi weathericon wi-snow"></span> 48hr ${snow48}" </br>`
+          : ""
+      }
+      ${
+        Number(snow72)
+          ? `<span class="wi weathericon wi-snow"></span> 72hr ${snow72}" </br>`
+          : ""
+      }
+      ${Number(snowDepthTop) ? `Summit ${snowDepthTop}" </br>` : ""}
+      ${Number(snowDepthBottom) ? `Base ${snowDepthBottom}" </br>` : ""}
+
+      ${`<span style="font-size: 12px;">${lastUpdated}</span>`}
+      `;
+
+      wrapper.appendChild(report);
+    }
+    this.currentReportShowing = LOST_TRAIL_REPORT;
     return wrapper;
   },
 
@@ -335,44 +398,26 @@ Module.register("snowbowl", {
       },
       { lastUpdated }
     );
-
-    console.log("lost:", reportObj);
-    // const {
-    //   "Current Temperature": tempCurrent,
-    //   "Current Weather": weather,
-    //   "Current Wind": wind,
-    //   "Lifts Open": liftsOpen,
-    //   "New Snow (since lifts closed)": newSnow,
-    //   "New Snow, 24 hours": snow24,
-    //   "New Snow, 48 hours": snow48,
-    //   "New Snow, 72 hours": snow72,
-    //   "Snow Depth - Bottom": snowDepthBottom,
-    //   "Snow Depth - Top": snowDepthTop,
-    //   "Snowfall, YTD": snowYTD,
-    //   "Surface Conditions (Primary)": surfacePrimary,
-    //   "Surface Conditions (Secondary)": surfaceSecondary,
-    //   "Terrain Open": terrainOpen,
-    //   "Trails Open": trails
-    // } = reportObj;
-    // this.discoReportJson = {
-    //   tempCurrent,
-    //   weather,
-    //   wind,
-    //   liftsOpen,
-    //   newSnow,
-    //   snow24,
-    //   snow48,
-    //   snow72,
-    //   snowDepthBottom,
-    //   snowDepthTop,
-    //   snowYTD,
-    //   surfacePrimary,
-    //   surfaceSecondary,
-    //   terrainOpen,
-    //   trails,
-    //   lastUpdated
-    // };
-
-    // this.updateDom(this.config.animationSpeed);
+    const {
+      "12 hr": newSnow,
+      "24 hr": snow24,
+      "48hr": snow48,
+      "72hr ": snow72,
+      "Base of snow at the Lodge ": snowDepthBottom,
+      "Base of snow at the Summit ": snowDepthTop,
+      "Snowfall To Date- 11-9-18": snowYTD
+    } = reportObj;
+    this.lostReportJson = {
+      newSnow,
+      snow24,
+      snow48,
+      snow72,
+      snowDepthBottom,
+      snowDepthTop,
+      snowYTD,
+      lastUpdated
+    };
+    console.log("lost:", this.lostReportJson);
+    this.updateDom(this.config.animationSpeed);
   }
 });
