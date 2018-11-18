@@ -56,14 +56,14 @@ Module.register("snowbowl", {
     setTimeout(() => self.getData(), nextLoad);
   },
   getDom() {
-    switch (this.currentReportShowing) {
-      case SNOWBOWL_REPORT:
-        return this.getDiscoDom();
-      case DISCO_REPORT:
-        return this.getLostDom();
-      case LOST_TRAIL_REPORT:
-        return this.getSnowBowlDom();
+    if (this.currentReportShowing === SNOWBOWL_REPORT && this.discoReportJson) {
+      return this.getDiscoDom();
     }
+    if (this.currentReportShowing === DISCO_REPORT && this.lostReportJson) {
+      return this.getLostDom();
+    }
+
+    return this.getSnowBowlDom();
   },
   getSnowBowlDom() {
     var wrapper = document.createElement("div");
