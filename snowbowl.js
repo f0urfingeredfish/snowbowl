@@ -110,7 +110,7 @@ Module.register("snowbowl", {
 
     this.snowbowlReportJson = reportObj;
 
-    this.updateDom(this.config.animationSpeed);
+
     console.log("Processed snowbowl report", this.snowbowlReportJson);
   },
 
@@ -187,7 +187,7 @@ Module.register("snowbowl", {
       isError: false
     };
 
-    this.updateDom(this.config.animationSpeed);
+
     console.log("snowbowl Processed disco report", this.discoReportJson);
   },
 
@@ -249,7 +249,7 @@ Module.register("snowbowl", {
       isError: false
     };
     console.log("Processed lost trail report:", this.lostReportJson);
-    this.updateDom(this.config.animationSpeed);
+
   },
 
   /* scheduleUpdate()
