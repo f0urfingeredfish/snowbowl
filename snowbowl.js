@@ -189,6 +189,7 @@ Module.register("snowbowl", {
     if (reportHtml.isError) {
       console.error("Fetching lost trail report failed", report.error);
       this.lostReportJson = { isError: true };
+      this.updateDom(this.config.animationSpeed);
       return;
     }
     console.log("Recieved lost trail report");
@@ -203,6 +204,7 @@ Module.register("snowbowl", {
     if (!lastUpdatedEl) {
       console.warn("Can't parse lost trail report", reportHtml);
       this.lostReportJson = { isError: true };
+      this.updateDom(this.config.animationSpeed);
       return;
     }
     const lastUpdated = lastUpdatedEl.innerText.split("@")[1].replace(")", "");
