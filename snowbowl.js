@@ -32,7 +32,7 @@ Module.register("snowbowl", {
   start() {
     //Flag for check if module is loaded
     this.loaded = false;
-    this.reportDomGenertator = this.reportGenerator();
+    this.reportIndex = 0;
     // Schedule update timer.
     this.getData();
 
@@ -256,19 +256,10 @@ Module.register("snowbowl", {
     setTimeout(() => self.getData(), this.config.fetchReportInterval);
   },
 
-  *reportGenerator() {
-    let index = 0;
-    const reports = [this.getDiscoDom, this.getLostDom, this.getSnowBowlDom];
-
-    while (true) {
-      if (index >= reports.length) index = 0;
-      yield reports[index++]();
-    }
-  },
-
   getDom() {
-    const reportDom = this.reportDomGenertator.next().value;
-    return reportDom;
+    const reports = [this.getDiscoDom, this.getLostDom, this.getSnowBowlDom];
+    if (this.reportIndex >= this.reportIndex.length) this.reportIndex = 0;
+    return reports[this.reportIndex++]();
   },
 
   getSnowBowlDom() {
