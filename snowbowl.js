@@ -258,7 +258,7 @@ Module.register("snowbowl", {
 
   getDom() {
     const reports = [this.getDiscoDom, this.getLostDom, this.getSnowBowlDom];
-    if (this.reportIndex >= this.reportIndex.length) this.reportIndex = 0;
+    if (this.reportIndex >= reports.length) this.reportIndex = 0;
     return reports[this.reportIndex++]();
   },
 
