@@ -11,6 +11,7 @@ const SNOWBOWL_REPORT = "snowbowl-report";
 const DISCO_REPORT = "disco-report";
 const LOST_TRAIL_REPORT = "lost-trail-report";
 const REPORTS = [DISCO_REPORT, LOST_TRAIL_REPORT, SNOWBOWL_REPORT];
+const REPORT_HEADERS = ["Discovery", "Lost Trail", "Snowbowl"];
 
 Module.register("snowbowl", {
   defaults: {
@@ -110,7 +111,6 @@ Module.register("snowbowl", {
 
     this.snowbowlReportJson = reportObj;
 
-
     console.log("Processed snowbowl report", this.snowbowlReportJson);
   },
 
@@ -187,7 +187,6 @@ Module.register("snowbowl", {
       isError: false
     };
 
-
     console.log("snowbowl Processed disco report", this.discoReportJson);
   },
 
@@ -249,7 +248,6 @@ Module.register("snowbowl", {
       isError: false
     };
     console.log("Processed lost trail report:", this.lostReportJson);
-
   },
 
   /* scheduleUpdate()
@@ -272,6 +270,10 @@ Module.register("snowbowl", {
       case SNOWBOWL_REPORT:
         return this.getSnowBowlDom();
     }
+  },
+
+  getHeader() {
+    return REPORT_HEADERS[this.reportIndex];
   },
 
   getSnowBowlDom() {
@@ -300,7 +302,6 @@ Module.register("snowbowl", {
       } = this.snowbowlReportJson;
       var report = document.createElement("label");
       report.innerHTML = `
-      <div>Snowbowl</div>
       ${
         Number(newstormtotal)
           ? `<span class="wi weathericon wi-snow"></span> Storm ${newstormtotal}" </br>`
@@ -366,7 +367,6 @@ Module.register("snowbowl", {
       } = this.discoReportJson;
       var report = document.createElement("div");
       report.innerHTML = `
-      <div>Discovery</div>
       ${weather ? `${weather} </br>` : ""}
       ${Number(tempCurrent) ? `Base ${tempCurrent}° </br>` : ""}
       ${
@@ -425,9 +425,6 @@ Module.register("snowbowl", {
       } = this.lostReportJson;
       var report = document.createElement("div");
       report.innerHTML = `
-      <div>Lost Trail</div>
-
-
       ${
         Number(newSnow)
           ? `<span class="wi weathericon wi-snow"></span> Storm ${newSnow}" </br>`
