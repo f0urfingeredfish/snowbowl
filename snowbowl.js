@@ -264,7 +264,7 @@ Module.register("snowbowl", {
 
   getDom() {
     if (this.reportIndex >= REPORTS.length) this.reportIndex = 0;
-    switch (REPORTS[this.reportIndex]) {
+    switch (REPORTS[this.reportIndex++]) {
       case DISCO_REPORT:
         return this.getDiscoDom();
       case LOST_TRAIL_REPORT:
