@@ -319,9 +319,7 @@ Module.register("snowbowl", {
       this.discoReportJson = null;
       return;
     }
-    const lastUpdated = lastUpdatedEl
-      .querySelector("#non-tabbing-tab > span")
-      .innerText.replace("Updated: ", "");
+    const lastUpdated = lastUpdatedEl.innerText.replace("Updated: ", "");
     const rows = [].slice.call(
       parsingDiv.querySelector(".main-tile .main-content").children
     );
