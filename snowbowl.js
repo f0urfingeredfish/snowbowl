@@ -58,7 +58,9 @@ Module.register("snowbowl", {
   },
 
   getDom() {
-    return this.reportGenerator.next().value();
+    return this.reportGenerator()
+      .next()
+      .value();
   },
 
   getSnowBowlDom() {
