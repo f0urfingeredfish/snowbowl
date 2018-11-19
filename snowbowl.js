@@ -49,16 +49,18 @@ Module.register("snowbowl", {
   scheduleUpdate() {
     setTimeout(() => self.getData(), this.config.fetchReportInterval);
   },
-  getDom() {
-    if (this.currentReportShowing === SNOWBOWL_REPORT && this.discoReportJson) {
-      return this.getDiscoDom();
-    }
-    if (this.currentReportShowing === DISCO_REPORT && this.lostReportJson) {
-      return this.getLostDom();
-    }
 
-    return this.getSnowBowlDom();
+  *reportGenerator() {
+    let index = 0;
+    const reports = [this.getDiscoDom, this.getLostDom, this.getSnowBowlDom];
+    if (index >= reports.length) index = 0;
+    yield reports[index++];
   },
+
+  getDom() {
+    return this.reportGenerator.next().value();
+  },
+
   getSnowBowlDom() {
     var wrapper = document.createElement("div");
     wrapper.style.fontSize = "16px";
