@@ -13,7 +13,7 @@ const LOST_TRAIL_REPORT = "lost-trail-report";
 
 Module.register("snowbowl", {
   defaults: {
-    updateInterval: 60 * 1000,
+    updateInterval: 10 * 1000,
     fetchReportInterval: 1000 * 60 * 60,
     retryDelay: 5000
   },
@@ -23,7 +23,6 @@ Module.register("snowbowl", {
   start() {
     //Flag for check if module is loaded
     this.loaded = false;
-    this.currentReportShowing = LOST_TRAIL_REPORT;
 
     // Schedule update timer.
     this.getData();
@@ -37,7 +36,7 @@ Module.register("snowbowl", {
 	 *
 	 */
   getData() {
-    this.sendSocketNotification("snowbowl-GET_REPORT");
+    this.sendSocketNotification("snowbowl-GET_REPORTS");
   },
 
   /* scheduleUpdate()
@@ -54,7 +53,7 @@ Module.register("snowbowl", {
     let index = 0;
     const reports = [this.getDiscoDom, this.getLostDom, this.getSnowBowlDom];
     if (index >= reports.length) index = 0;
-    yield reports[index++];
+    while (true) yield reports[index++];
   },
 
   getDom() {
@@ -120,7 +119,7 @@ Module.register("snowbowl", {
 
       wrapper.appendChild(report);
     }
-    this.currentReportShowing = SNOWBOWL_REPORT;
+
     return wrapper;
   },
 
@@ -184,7 +183,7 @@ Module.register("snowbowl", {
 
       wrapper.appendChild(report);
     }
-    this.currentReportShowing = DISCO_REPORT;
+
     return wrapper;
   },
 
@@ -238,7 +237,7 @@ Module.register("snowbowl", {
 
       wrapper.appendChild(report);
     }
-    this.currentReportShowing = LOST_TRAIL_REPORT;
+
     return wrapper;
   },
 
@@ -268,6 +267,7 @@ Module.register("snowbowl", {
   },
 
   processSnowbowlData(report) {
+    console.log("Recieved snowbowl report");
     const startSearch = "<!-- BEGIN POLLING --";
     const endSearch = "-- END POLLING -->";
 
@@ -305,9 +305,11 @@ Module.register("snowbowl", {
     this.snowbowlReportJson = reportObj;
 
     this.updateDom(this.config.animationSpeed);
+    console.log("Processed snowbowl report", this.snowbowlReportJson);
   },
 
   processDiscoData(reportHtml) {
+    console.log("Recieved disco report");
     const newHTMLDocument = document.implementation.createHTMLDocument(
       "preview"
     );
@@ -372,9 +374,11 @@ Module.register("snowbowl", {
     };
 
     this.updateDom(this.config.animationSpeed);
+    console.log("snowbowl Processed disco report", this.discoReportJson);
   },
 
   processLostData(reportHtml) {
+    console.log("Recieved lost trail report");
     const newHTMLDocument = document.implementation.createHTMLDocument(
       "losttrail"
     );
@@ -422,7 +426,7 @@ Module.register("snowbowl", {
       snowYTD,
       lastUpdated
     };
-    console.log("lost:", this.lostReportJson);
+    console.log("Processed lost trail report:", this.lostReportJson);
     this.updateDom(this.config.animationSpeed);
   }
 });

@@ -41,7 +41,7 @@ module.exports = NodeHelper.create({
 	 * argument payload mixed - The payload of the notification.
 	 */
   socketNotificationReceived: async function(notification, payload) {
-    if (notification === "snowbowl-GET_REPORT") {
+    if (notification === "snowbowl-GET_REPORTS") {
       try {
         const report = await getHTML("https://montanasnowbowl.com/report.php3");
         this.sendSocketNotification("snowbowl-GET_REPORT", report);
