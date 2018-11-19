@@ -44,28 +44,46 @@ module.exports = NodeHelper.create({
     if (notification === "snowbowl-GET_REPORTS") {
       try {
         const report = await getHTML("https://montanasnowbowl.com/report.php3");
-        this.sendSocketNotification("snowbowl-GET_REPORT", report);
-      } catch (e) {
-        console.error(e);
+        this.sendSocketNotification("snowbowl-GET_REPORT_SUCCESS", report);
+      } catch (error) {
+        console.error("snowbowl", error);
+        this.sendSocketNotification("snowbowl-GET_REPORT_SUCCESS", {
+          isError: true,
+          error
+        });
       }
 
       try {
         const report = await getHTML(
           "https://www.skidiscovery.com/snow-report/"
         );
-        this.sendSocketNotification("snowbowl-GET_REPORT_DISCO", report);
-      } catch (e) {
-        console.error(e);
+        this.sendSocketNotification(
+          "snowbowl-GET_REPORT_DISCO_SUCCESS",
+          report
+        );
+      } catch (error) {
+        console.error("snowbowl", error);
+        this.sendSocketNotification("snowbowl-GET_REPORT_DISCO_SUCCESS", {
+          isError: true,
+          error
+        });
       }
+
       try {
         const response = await exec(
           "curl 'https://www.losttrail.com/snow-report/' -H 'authority: www.losttrail.com' -H 'pragma: no-cache' -H 'cache-control: no-cache' -H 'upgrade-insecure-requests: 1' -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.102 Safari/537.36' -H 'dnt: 1' -H 'accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8' -H 'accept-encoding: gzip, deflate, br' -H 'accept-language: en-US,en;q=0.9' -H 'cookie: PHPSESSID=fj63rlp29ogot5tbcjsrmcev02; wcp_useroptions_id=9a66350fb22ae9459b26a24a1df4bfc15befb463d85e55.61366257; vchideactivationmsg=1; vchideactivationmsg_vc11=5.5.5; incap_ses_207_1728444=WT5wOviXOF5+MgKs22nfAucB8VsAAAAAYiu9ezmIfv7FKutembzS2w==; visid_incap_1728444=bHAfANHZQOeM0K8OENIuI2G071sAAAAAQ0IPAAAAAACAkkiIAUiuSWcKrQEmjD1O9l26I7DxgxA+; _fbp=fb.1.1542521456051.1361509601' --compressed"
         );
 
-        this.sendSocketNotification("snowbowl-GET_REPORT_LOST", response);
-      } catch (e) {
-        console.error(e);
-        this.sendSocketNotification("snowbowl-GET_REPORT_LOST_ERROR", e);
+        this.sendSocketNotification(
+          "snowbowl-GET_REPORT_LOST_SUCCESS",
+          response
+        );
+      } catch (error) {
+        console.error("snowbowl", error);
+        this.sendSocketNotification("snowbowl-GET_REPORT_LOST_SUCCESS", {
+          isError: true,
+          error
+        });
       }
     }
   }

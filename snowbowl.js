@@ -20,6 +20,15 @@ Module.register("snowbowl", {
 
   requiresVersion: "2.1.0", // Required version of MagicMirror
 
+  getScripts: () => [],
+  getStyles: () => ["snowbowl.css"],
+
+  // Load translations files
+  getTranslations: () => ({
+    en: "translations/en.json",
+    es: "translations/es.json"
+  }),
+
   start() {
     //Flag for check if module is loaded
     this.loaded = false;
@@ -39,234 +48,26 @@ Module.register("snowbowl", {
     this.sendSocketNotification("snowbowl-GET_REPORTS");
   },
 
-  /* scheduleUpdate()
-	 * Schedule next update.
-	 *
-	 * argument delay number - Milliseconds before next update.
-	 *  If empty, this.config.updateInterval is used.
-	 */
-  scheduleUpdate() {
-    setTimeout(() => self.getData(), this.config.fetchReportInterval);
-  },
-
-  *reportGenerator() {
-    let index = 0;
-    const reports = [this.getDiscoDom, this.getLostDom, this.getSnowBowlDom];
-    if (index >= reports.length) index = 0;
-    while (true) yield reports[index++];
-  },
-
-  getDom() {
-    return this.reportGenerator()
-      .next()
-      .value();
-  },
-
-  getSnowBowlDom() {
-    var wrapper = document.createElement("div");
-    wrapper.style.fontSize = "16px";
-    wrapper.style.lineHeight = "normal";
-    wrapper.style.maxWidth = "370px";
-
-    if (this.snowbowlReportJson) {
-      const {
-        newstormtotal,
-        lastupdated,
-        "24hourtotal": twentyFourHourTotal,
-        current_temp_base,
-        current_weather_type,
-        operations_hoursofweekday,
-        operations_lifts,
-        operations_trails,
-        operations_peropen,
-        surface_condition_primary,
-        surface_condition_secondary,
-        surface_depth_base,
-        surface_depth_summit,
-        specialevents,
-        comments
-      } = this.snowbowlReportJson;
-      var report = document.createElement("label");
-      report.innerHTML = `
-      <div>Snowbowl</div>
-      ${
-        Number(newstormtotal)
-          ? `<span class="wi weathericon wi-snow"></span> Storm ${newstormtotal}" </br>`
-          : ""
-      }
-      ${
-        Number(twentyFourHourTotal)
-          ? `<span class="wi weathericon wi-snow"></span> 24hr ${twentyFourHourTotal}" </br>`
-          : ""
-      }
-      ${Number(current_temp_base) ? `Base ${current_temp_base}° </br>` : ""}
-      ${current_weather_type ? `${current_weather_type} </br>` : ""}
-      ${
-        operations_hoursofweekday
-          ? `Hours ${operations_hoursofweekday}</br>`
-          : ""
-      }
-      ${
-        Number(surface_depth_summit)
-          ? `Summit ${surface_depth_summit}" </br>`
-          : ""
-      }
-      ${Number(surface_depth_base) ? `Base ${surface_depth_base}" </br>` : ""}
-      ${specialevents ? `Events: ${specialevents}</br>` : ""}
-      ${comments ? `${comments}</br>` : ""}
-      ${`<span style="font-size: 12px;">${lastupdated}</span>`}
-      `;
-
-      wrapper.appendChild(report);
-    }
-
-    return wrapper;
-  },
-
-  getDiscoDom() {
-    var wrapper = document.createElement("div");
-    wrapper.style.fontSize = "16px";
-    wrapper.style.lineHeight = "normal";
-    wrapper.style.maxWidth = "370px";
-
-    if (this.discoReportJson) {
-      const {
-        tempCurrent,
-        weather,
-        wind,
-        liftsOpen,
-        newSnow,
-        snow24,
-        snow48,
-        snow72,
-        snowDepthBottom,
-        snowDepthTop,
-        snowYTD,
-        surfacePrimary,
-        surfaceSecondary,
-        terrainOpen,
-        trails,
-        lastUpdated
-      } = this.discoReportJson;
-      var report = document.createElement("div");
-      report.innerHTML = `
-      <div>Discovery</div>
-      ${weather ? `${weather} </br>` : ""}
-      ${Number(tempCurrent) ? `Base ${tempCurrent}° </br>` : ""}
-      ${
-        Number(newSnow)
-          ? `<span class="wi weathericon wi-snow"></span> Storm ${newSnow}" </br>`
-          : ""
-      }
-      ${
-        Number(snow24)
-          ? `<span class="wi weathericon wi-snow"></span> 24hr ${snow24}" </br>`
-          : ""
-      }
-      ${
-        Number(snow48)
-          ? `<span class="wi weathericon wi-snow"></span> 48hr ${snow48}" </br>`
-          : ""
-      }
-      ${
-        Number(snow72)
-          ? `<span class="wi weathericon wi-snow"></span> 72hr ${snow72}" </br>`
-          : ""
-      }
-      ${Number(snowDepthTop) ? `Summit ${snowDepthTop}" </br>` : ""}
-      ${Number(snowDepthBottom) ? `Base ${snowDepthBottom}" </br>` : ""}
-      ${surfacePrimary ? `Surface: ${surfacePrimary}</br>` : ""}
-      ${liftsOpen ? `Lifts ${liftsOpen}</br>` : ""}
-      ${trails ? `Trails ${trails}</br>` : ""}
-      ${`<span style="font-size: 12px;">${lastUpdated}</span>`}
-      `;
-
-      wrapper.appendChild(report);
-    }
-
-    return wrapper;
-  },
-
-  getLostDom() {
-    var wrapper = document.createElement("div");
-    wrapper.style.fontSize = "16px";
-    wrapper.style.lineHeight = "normal";
-    wrapper.style.maxWidth = "370px";
-
-    if (this.lostReportJson) {
-      const {
-        newSnow,
-        snow24,
-        snow48,
-        snow72,
-        snowDepthBottom,
-        snowDepthTop,
-        snowYTD,
-        lastUpdated
-      } = this.lostReportJson;
-      var report = document.createElement("div");
-      report.innerHTML = `
-      <div>Lost Trail</div>
-
-
-      ${
-        Number(newSnow)
-          ? `<span class="wi weathericon wi-snow"></span> Storm ${newSnow}" </br>`
-          : ""
-      }
-      ${
-        Number(snow24)
-          ? `<span class="wi weathericon wi-snow"></span> 24hr ${snow24}" </br>`
-          : ""
-      }
-      ${
-        Number(snow48)
-          ? `<span class="wi weathericon wi-snow"></span> 48hr ${snow48}" </br>`
-          : ""
-      }
-      ${
-        Number(snow72)
-          ? `<span class="wi weathericon wi-snow"></span> 72hr ${snow72}" </br>`
-          : ""
-      }
-      ${Number(snowDepthTop) ? `Summit ${snowDepthTop}" </br>` : ""}
-      ${Number(snowDepthBottom) ? `Base ${snowDepthBottom}" </br>` : ""}
-
-      ${`<span style="font-size: 12px;">${lastUpdated}</span>`}
-      `;
-
-      wrapper.appendChild(report);
-    }
-
-    return wrapper;
-  },
-
-  getScripts: () => [],
-  getStyles: () => ["snowbowl.css"],
-
-  // Load translations files
-  getTranslations: () => ({
-    en: "translations/en.json",
-    es: "translations/es.json"
-  }),
-
   // socketNotificationReceived from helper
   socketNotificationReceived(notification, payload) {
-    if (notification === "snowbowl-GET_REPORT") {
+    if (notification === "snowbowl-GET_REPORT_SUCCESS") {
       this.processSnowbowlData(payload);
     }
-    if (notification === "snowbowl-GET_REPORT_DISCO") {
+    if (notification === "snowbowl-GET_REPORT_DISCO_SUCCESS") {
       this.processDiscoData(payload);
     }
-    if (notification === "snowbowl-GET_REPORT_LOST") {
+    if (notification === "snowbowl-GET_REPORT_LOST_SUCCESS") {
       this.processLostData(payload);
-    }
-    if (notification === "snowbowl-GET_REPORT_LOST_ERROR") {
-      console.error("snowbowl-GET_REPORT_LOST_ERROR", payload);
     }
   },
 
   processSnowbowlData(report) {
+    if (report.isError) {
+      console.error("Fetching snowbowl report failed", report.error);
+      this.snowbowlReportJson = { isError: true };
+      this.updateDom(this.config.animationSpeed);
+      return;
+    }
     console.log("Recieved snowbowl report");
     const startSearch = "<!-- BEGIN POLLING --";
     const endSearch = "-- END POLLING -->";
@@ -309,6 +110,12 @@ Module.register("snowbowl", {
   },
 
   processDiscoData(reportHtml) {
+    if (reportHtml.isError) {
+      console.error("Fetching disco report failed", report.error);
+      this.discoReportJson = { isError: true };
+      this.updateDom(this.config.animationSpeed);
+      return;
+    }
     console.log("Recieved disco report");
     const newHTMLDocument = document.implementation.createHTMLDocument(
       "preview"
@@ -318,7 +125,8 @@ Module.register("snowbowl", {
     const lastUpdatedEl = parsingDiv.querySelector("#non-tabbing-tab > span");
     if (!lastUpdatedEl) {
       console.warn("Can't parse Discovery report", reportHtml);
-      this.discoReportJson = null;
+      this.discoReportJson = { isError: true };
+      this.updateDom(this.config.animationSpeed);
       return;
     }
     const lastUpdated = lastUpdatedEl.innerText.replace("Updated: ", "");
@@ -378,6 +186,11 @@ Module.register("snowbowl", {
   },
 
   processLostData(reportHtml) {
+    if (reportHtml.isError) {
+      console.error("Fetching lost trail report failed", report.error);
+      this.lostReportJson = { isError: true };
+      return;
+    }
     console.log("Recieved lost trail report");
     const newHTMLDocument = document.implementation.createHTMLDocument(
       "losttrail"
@@ -389,7 +202,7 @@ Module.register("snowbowl", {
     );
     if (!lastUpdatedEl) {
       console.warn("Can't parse lost trail report", reportHtml);
-      this.lostReportJson = null;
+      this.lostReportJson = { isError: true };
       return;
     }
     const lastUpdated = lastUpdatedEl.innerText.split("@")[1].replace(")", "");
@@ -428,5 +241,214 @@ Module.register("snowbowl", {
     };
     console.log("Processed lost trail report:", this.lostReportJson);
     this.updateDom(this.config.animationSpeed);
+  },
+
+  /* scheduleUpdate()
+	 * Schedule next update.
+	 *
+	 * argument delay number - Milliseconds before next update.
+	 *  If empty, this.config.updateInterval is used.
+	 */
+  scheduleUpdate() {
+    setTimeout(() => self.getData(), this.config.fetchReportInterval);
+  },
+
+  *reportGenerator() {
+    let index = 0;
+    const reports = [this.getDiscoDom, this.getLostDom, this.getSnowBowlDom];
+    if (index >= reports.length) index = 0;
+    while (true) yield reports[index++]();
+  },
+
+  getDom() {
+    return this.reportGenerator().next().value;
+  },
+
+  getSnowBowlDom() {
+    var wrapper = document.createElement("div");
+    wrapper.style.fontSize = "16px";
+    wrapper.style.lineHeight = "normal";
+    wrapper.style.maxWidth = "370px";
+
+    if (this.snowbowlReportJson && !this.snowbowlReportJson.isError) {
+      const {
+        newstormtotal,
+        lastupdated,
+        "24hourtotal": twentyFourHourTotal,
+        current_temp_base,
+        current_weather_type,
+        operations_hoursofweekday,
+        operations_lifts,
+        operations_trails,
+        operations_peropen,
+        surface_condition_primary,
+        surface_condition_secondary,
+        surface_depth_base,
+        surface_depth_summit,
+        specialevents,
+        comments
+      } = this.snowbowlReportJson;
+      var report = document.createElement("label");
+      report.innerHTML = `
+      <div>Snowbowl</div>
+      ${
+        Number(newstormtotal)
+          ? `<span class="wi weathericon wi-snow"></span> Storm ${newstormtotal}" </br>`
+          : ""
+      }
+      ${
+        Number(twentyFourHourTotal)
+          ? `<span class="wi weathericon wi-snow"></span> 24hr ${twentyFourHourTotal}" </br>`
+          : ""
+      }
+      ${Number(current_temp_base) ? `Base ${current_temp_base}° </br>` : ""}
+      ${current_weather_type ? `${current_weather_type} </br>` : ""}
+      ${
+        operations_hoursofweekday
+          ? `Hours ${operations_hoursofweekday}</br>`
+          : ""
+      }
+      ${
+        Number(surface_depth_summit)
+          ? `Summit ${surface_depth_summit}" </br>`
+          : ""
+      }
+      ${Number(surface_depth_base) ? `Base ${surface_depth_base}" </br>` : ""}
+      ${specialevents ? `Events: ${specialevents}</br>` : ""}
+      ${comments ? `${comments}</br>` : ""}
+      ${`<span style="font-size: 12px;">${lastupdated}</span>`}
+      `;
+
+      wrapper.appendChild(report);
+    }
+
+    if (this.snowbowlReportJson && this.snowbowlReportJson.isError) {
+      wrapper.innerHTML = "There was a problem loading snowbowl report.";
+    }
+
+    return wrapper;
+  },
+
+  getDiscoDom() {
+    var wrapper = document.createElement("div");
+    wrapper.style.fontSize = "16px";
+    wrapper.style.lineHeight = "normal";
+    wrapper.style.maxWidth = "370px";
+
+    if (this.discoReportJson && !this.discoReportJson.isError) {
+      const {
+        tempCurrent,
+        weather,
+        wind,
+        liftsOpen,
+        newSnow,
+        snow24,
+        snow48,
+        snow72,
+        snowDepthBottom,
+        snowDepthTop,
+        snowYTD,
+        surfacePrimary,
+        surfaceSecondary,
+        terrainOpen,
+        trails,
+        lastUpdated
+      } = this.discoReportJson;
+      var report = document.createElement("div");
+      report.innerHTML = `
+      <div>Discovery</div>
+      ${weather ? `${weather} </br>` : ""}
+      ${Number(tempCurrent) ? `Base ${tempCurrent}° </br>` : ""}
+      ${
+        Number(newSnow)
+          ? `<span class="wi weathericon wi-snow"></span> Storm ${newSnow}" </br>`
+          : ""
+      }
+      ${
+        Number(snow24)
+          ? `<span class="wi weathericon wi-snow"></span> 24hr ${snow24}" </br>`
+          : ""
+      }
+      ${
+        Number(snow48)
+          ? `<span class="wi weathericon wi-snow"></span> 48hr ${snow48}" </br>`
+          : ""
+      }
+      ${
+        Number(snow72)
+          ? `<span class="wi weathericon wi-snow"></span> 72hr ${snow72}" </br>`
+          : ""
+      }
+      ${Number(snowDepthTop) ? `Summit ${snowDepthTop}" </br>` : ""}
+      ${Number(snowDepthBottom) ? `Base ${snowDepthBottom}" </br>` : ""}
+      ${surfacePrimary ? `Surface: ${surfacePrimary}</br>` : ""}
+      ${liftsOpen ? `Lifts ${liftsOpen}</br>` : ""}
+      ${trails ? `Trails ${trails}</br>` : ""}
+      ${`<span style="font-size: 12px;">${lastUpdated}</span>`}
+      `;
+
+      wrapper.appendChild(report);
+    }
+
+    if (this.discoReportJson && this.discoReportJson.isError) {
+      wrapper.innerHTML = "There was a problem loading disco report.";
+    }
+    return wrapper;
+  },
+
+  getLostDom() {
+    var wrapper = document.createElement("div");
+    wrapper.style.fontSize = "16px";
+    wrapper.style.lineHeight = "normal";
+    wrapper.style.maxWidth = "370px";
+
+    if (this.lostReportJson && !this.lostReportJson.isError) {
+      const {
+        newSnow,
+        snow24,
+        snow48,
+        snow72,
+        snowDepthBottom,
+        snowDepthTop,
+        snowYTD,
+        lastUpdated
+      } = this.lostReportJson;
+      var report = document.createElement("div");
+      report.innerHTML = `
+      <div>Lost Trail</div>
+
+
+      ${
+        Number(newSnow)
+          ? `<span class="wi weathericon wi-snow"></span> Storm ${newSnow}" </br>`
+          : ""
+      }
+      ${
+        Number(snow24)
+          ? `<span class="wi weathericon wi-snow"></span> 24hr ${snow24}" </br>`
+          : ""
+      }
+      ${
+        Number(snow48)
+          ? `<span class="wi weathericon wi-snow"></span> 48hr ${snow48}" </br>`
+          : ""
+      }
+      ${
+        Number(snow72)
+          ? `<span class="wi weathericon wi-snow"></span> 72hr ${snow72}" </br>`
+          : ""
+      }
+      ${Number(snowDepthTop) ? `Summit ${snowDepthTop}" </br>` : ""}
+      ${Number(snowDepthBottom) ? `Base ${snowDepthBottom}" </br>` : ""}
+
+      ${`<span style="font-size: 12px;">${lastUpdated}</span>`}
+      `;
+
+      wrapper.appendChild(report);
+    }
+    if (this.lostReportJson && this.lostReportJson.isError) {
+      wrapper.innerHTML = "There was a problem loading lost trail report.";
+    }
+    return wrapper;
   }
 });
