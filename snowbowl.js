@@ -10,6 +10,7 @@
 const SNOWBOWL_REPORT = "snowbowl-report";
 const DISCO_REPORT = "disco-report";
 const LOST_TRAIL_REPORT = "lost-trail-report";
+const REPORTS = [DISCO_REPORT, LOST_TRAIL_REPORT, SNOWBOWL_REPORT];
 
 Module.register("snowbowl", {
   defaults: {
@@ -262,9 +263,15 @@ Module.register("snowbowl", {
   },
 
   getDom() {
-    const reports = [this.getDiscoDom, this.getSnowBowlDom];
-    if (this.reportIndex >= reports.length) this.reportIndex = 0;
-    return reports[this.reportIndex++]();
+    if (this.reportIndex >= REPORTS.length) this.reportIndex = 0;
+    switch (REPORTS[this.reportIndex]) {
+      case DISCO_REPORT:
+        return this.getDiscoDom();
+      case LOST_TRAIL_REPORT:
+        return this.getLostDom();
+      case SNOWBOWL_REPORT:
+        return this.getSnowBowlDom();
+    }
   },
 
   getSnowBowlDom() {
