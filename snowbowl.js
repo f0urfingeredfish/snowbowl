@@ -32,9 +32,10 @@ Module.register("snowbowl", {
   start() {
     //Flag for check if module is loaded
     this.loaded = false;
-
+    this.reportDomGenertator = this.reportGenerator();
     // Schedule update timer.
     this.getData();
+
     setInterval(() => this.updateDom(), this.config.updateInterval);
   },
 
@@ -263,7 +264,8 @@ Module.register("snowbowl", {
   },
 
   getDom() {
-    return this.reportGenerator().next().value;
+    const reportDom = this.reportDomGenertator.next().value;
+    return reportDom;
   },
 
   getSnowBowlDom() {
