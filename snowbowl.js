@@ -255,7 +255,7 @@ Module.register("snowbowl", {
   getDom() {
     console.log("snowbowl getDom called");
     if (this.reportIndex >= REPORTS.length) this.reportIndex = 0;
-    switch (REPORTS[this.reportIndex++]) {
+    switch (REPORTS[this.reportIndex]) {
       case DISCO_REPORT:
         return this.getDiscoDom();
       case LOST_TRAIL_REPORT:
@@ -267,7 +267,7 @@ Module.register("snowbowl", {
 
   getHeader() {
     console.log("snowbowl getHeader called");
-    return REPORT_HEADERS[this.reportIndex];
+    return REPORT_HEADERS[this.reportIndex++];
   },
 
   getSnowBowlDom() {
