@@ -39,6 +39,7 @@ Module.register("snowbowl", {
     this.getData();
 
     setInterval(() => this.updateDom(), this.config.updateInterval);
+    setTimeout(() => this.getData(), this.config.fetchReportInterval);
   },
 
   /*
@@ -48,6 +49,7 @@ Module.register("snowbowl", {
 	 *
 	 */
   getData() {
+    console.log("snowbowl getData called");
     this.sendSocketNotification("snowbowl-GET_REPORTS");
   },
 
@@ -250,17 +252,8 @@ Module.register("snowbowl", {
     console.log("Processed lost trail report:", this.lostReportJson);
   },
 
-  /* scheduleUpdate()
-	 * Schedule next update.
-	 *
-	 * argument delay number - Milliseconds before next update.
-	 *  If empty, this.config.updateInterval is used.
-	 */
-  scheduleUpdate() {
-    setTimeout(() => self.getData(), this.config.fetchReportInterval);
-  },
-
   getDom() {
+    console.log("snowbowl getDom called");
     if (this.reportIndex >= REPORTS.length) this.reportIndex = 0;
     switch (REPORTS[this.reportIndex++]) {
       case DISCO_REPORT:
@@ -273,6 +266,7 @@ Module.register("snowbowl", {
   },
 
   getHeader() {
+    console.log("snowbowl getHeader called");
     return REPORT_HEADERS[this.reportIndex];
   },
 
