@@ -79,14 +79,17 @@ Module.register("snowbowl", {
         report.indexOf(endSearch)
       )
       .split("|~")
-      .reduce((prev, line) => {
-        let [key, val] = line.split("|");
-        key = key.replace("\n", "");
-        if (key) {
-          prev[key] = val;
-        }
-        return prev;
-      }, {});
+      .reduce(
+        (prev, line) => {
+          let [key, val] = line.split("|");
+          key = key.replace("\n", "");
+          if (key) {
+            prev[key] = val;
+          }
+          return prev;
+        },
+        { isError: false }
+      );
 
     // { lastupdated: 'Tuesday Oct 02, 2018 07:00 PM',
     // newstormtotal: '0',
@@ -179,7 +182,8 @@ Module.register("snowbowl", {
       surfaceSecondary,
       terrainOpen,
       trails,
-      lastUpdated
+      lastUpdated,
+      isError: false
     };
 
     this.updateDom(this.config.animationSpeed);
@@ -240,7 +244,8 @@ Module.register("snowbowl", {
       snowDepthBottom,
       snowDepthTop,
       snowYTD,
-      lastUpdated
+      lastUpdated,
+      isError: false
     };
     console.log("Processed lost trail report:", this.lostReportJson);
     this.updateDom(this.config.animationSpeed);
@@ -257,7 +262,7 @@ Module.register("snowbowl", {
   },
 
   getDom() {
-    const reports = [this.getDiscoDom, this.getLostDom, this.getSnowBowlDom];
+    const reports = [this.getDiscoDom, this.getSnowBowlDom];
     if (this.reportIndex >= reports.length) this.reportIndex = 0;
     return reports[this.reportIndex++]();
   },
