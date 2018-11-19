@@ -36,8 +36,6 @@ Module.register("snowbowl", {
     this.loaded = false;
     this.reportIndex = 0;
     // Schedule update timer.
-    this.getData();
-
     setInterval(() => this.updateDom(), this.config.updateInterval);
     setTimeout(() => this.getData(), this.config.fetchReportInterval);
   },
