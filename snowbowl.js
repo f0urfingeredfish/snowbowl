@@ -259,8 +259,11 @@ Module.register("snowbowl", {
   *reportGenerator() {
     let index = 0;
     const reports = [this.getDiscoDom, this.getLostDom, this.getSnowBowlDom];
-    if (index >= reports.length) index = 0;
-    while (true) yield reports[index++]();
+
+    while (true) {
+      if (index >= reports.length) index = 0;
+      yield reports[index++]();
+    }
   },
 
   getDom() {
