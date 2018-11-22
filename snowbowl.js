@@ -198,58 +198,23 @@ Module.register("snowbowl", {
       this.updateDom(this.config.animationSpeed);
       return;
     }
-    const reportJSON = JSON.parse(reportHtml);
-    console.log("Recieved lost trail report", reportJSON);
-    // const newHTMLDocument = document.implementation.createHTMLDocument(
-    //   "losttrail"
-    // );
-    // const parsingDiv = newHTMLDocument.createElement("div");
-    // parsingDiv.innerHTML = reportHtml;
-    // const lastUpdatedEl = parsingDiv.querySelector(
-    //   "#content > div > div > div > article > div > div:nth-child(1) > div > div > div > div.vc_message_box.vc_message_box-standard.vc_message_box-rounded.vc_color-info > p:nth-child(3)"
-    // );
-    // if (!lastUpdatedEl) {
-    //   console.warn("Can't parse lost trail report", reportHtml);
-    //   this.lostReportJson = { isError: true };
-    //   this.updateDom(this.config.animationSpeed);
-    //   return;
-    // }
-    // const lastUpdated = lastUpdatedEl.innerText.split("@")[1].replace(")", "");
-    // const rows = [].slice.call(
-    //   parsingDiv.querySelector("#t9 > tbody").children
-    // );
-
-    // const reportObj = rows.reduce(
-    //   (prev, row) => {
-    //     const [key, val] = row.children;
-    //     if (key.innerText) {
-    //       prev[key.innerText] = val.innerText;
-    //     }
-    //     return prev;
-    //   },
-    //   { lastUpdated }
-    // );
-    // const {
-    //   "12 hr": newSnow,
-    //   "24 hr": snow24,
-    //   "48hr": snow48,
-    //   "72hr ": snow72,
-    //   "Base of snow at the Lodge ": snowDepthBottom,
-    //   "Base of snow at the Summit ": snowDepthTop,
-    //   "Snowfall To Date- 11-9-18": snowYTD
-    // } = reportObj;
-    // this.lostReportJson = {
-    //   newSnow,
-    //   snow24,
-    //   snow48,
-    //   snow72,
-    //   snowDepthBottom,
-    //   snowDepthTop,
-    //   snowYTD,
-    //   lastUpdated,
-    //   isError: false
-    // };
-    // console.log("Processed lost trail report:", this.lostReportJson);
+    try {
+      const reportJSON = JSON.parse(reportHtml);
+      console.log("Recieved lost trail report", reportJSON);
+      const data = reportJSON.data[0];
+      this.lostReportJson = {
+        newSnow: data.pastSnow.snow0day,
+        temp: data.weather0day.top_temp,
+        weather: data.weather0day.weather_symbol,
+        isError: false
+      };
+      console.log("Processed lost trail report:", this.lostReportJson);
+    } catch (e) {
+      console.error("Parsing lost trail report failed", e);
+      this.lostReportJson = { isError: true };
+      this.updateDom(this.config.animationSpeed);
+      return;
+    }
   },
 
   getDom() {
@@ -407,16 +372,7 @@ Module.register("snowbowl", {
     wrapper.style.maxWidth = "370px";
 
     if (this.lostReportJson && !this.lostReportJson.isError) {
-      const {
-        newSnow,
-        snow24,
-        snow48,
-        snow72,
-        snowDepthBottom,
-        snowDepthTop,
-        snowYTD,
-        lastUpdated
-      } = this.lostReportJson;
+      const { newSnow, temp, weather } = this.lostReportJson;
       var report = document.createElement("div");
       report.innerHTML = `
       ${
@@ -425,24 +381,15 @@ Module.register("snowbowl", {
           : ""
       }
       ${
-        Number(snow24)
-          ? `<span class="wi weathericon wi-snow"></span> 24hr ${snow24}" </br>`
+        Number(temp)
+          ? `<span class="wi weathericon wi-snow"></span> Temp ${temp}°" </br>`
           : ""
       }
       ${
-        Number(snow48)
-          ? `<span class="wi weathericon wi-snow"></span> 48hr ${snow48}" </br>`
+        Number(weather)
+          ? `<span class="wi weathericon wi-snow"></span> 48hr ${weather}" </br>`
           : ""
       }
-      ${
-        Number(snow72)
-          ? `<span class="wi weathericon wi-snow"></span> 72hr ${snow72}" </br>`
-          : ""
-      }
-      ${Number(snowDepthTop) ? `Summit ${snowDepthTop}" </br>` : ""}
-      ${Number(snowDepthBottom) ? `Base ${snowDepthBottom}" </br>` : ""}
-
-      ${`<span style="font-size: 12px;">${lastUpdated}</span>`}
       `;
 
       wrapper.appendChild(report);
