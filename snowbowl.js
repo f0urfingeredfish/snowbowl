@@ -198,57 +198,58 @@ Module.register("snowbowl", {
       this.updateDom(this.config.animationSpeed);
       return;
     }
-    console.log("Recieved lost trail report");
-    const newHTMLDocument = document.implementation.createHTMLDocument(
-      "losttrail"
-    );
-    const parsingDiv = newHTMLDocument.createElement("div");
-    parsingDiv.innerHTML = reportHtml;
-    const lastUpdatedEl = parsingDiv.querySelector(
-      "#content > div > div > div > article > div > div:nth-child(1) > div > div > div > div.vc_message_box.vc_message_box-standard.vc_message_box-rounded.vc_color-info > p:nth-child(3)"
-    );
-    if (!lastUpdatedEl) {
-      console.warn("Can't parse lost trail report", reportHtml);
-      this.lostReportJson = { isError: true };
-      this.updateDom(this.config.animationSpeed);
-      return;
-    }
-    const lastUpdated = lastUpdatedEl.innerText.split("@")[1].replace(")", "");
-    const rows = [].slice.call(
-      parsingDiv.querySelector("#t9 > tbody").children
-    );
+    const reportJSON = JSON.parse(reportHtml);
+    console.log("Recieved lost trail report", reportJSON);
+    // const newHTMLDocument = document.implementation.createHTMLDocument(
+    //   "losttrail"
+    // );
+    // const parsingDiv = newHTMLDocument.createElement("div");
+    // parsingDiv.innerHTML = reportHtml;
+    // const lastUpdatedEl = parsingDiv.querySelector(
+    //   "#content > div > div > div > article > div > div:nth-child(1) > div > div > div > div.vc_message_box.vc_message_box-standard.vc_message_box-rounded.vc_color-info > p:nth-child(3)"
+    // );
+    // if (!lastUpdatedEl) {
+    //   console.warn("Can't parse lost trail report", reportHtml);
+    //   this.lostReportJson = { isError: true };
+    //   this.updateDom(this.config.animationSpeed);
+    //   return;
+    // }
+    // const lastUpdated = lastUpdatedEl.innerText.split("@")[1].replace(")", "");
+    // const rows = [].slice.call(
+    //   parsingDiv.querySelector("#t9 > tbody").children
+    // );
 
-    const reportObj = rows.reduce(
-      (prev, row) => {
-        const [key, val] = row.children;
-        if (key.innerText) {
-          prev[key.innerText] = val.innerText;
-        }
-        return prev;
-      },
-      { lastUpdated }
-    );
-    const {
-      "12 hr": newSnow,
-      "24 hr": snow24,
-      "48hr": snow48,
-      "72hr ": snow72,
-      "Base of snow at the Lodge ": snowDepthBottom,
-      "Base of snow at the Summit ": snowDepthTop,
-      "Snowfall To Date- 11-9-18": snowYTD
-    } = reportObj;
-    this.lostReportJson = {
-      newSnow,
-      snow24,
-      snow48,
-      snow72,
-      snowDepthBottom,
-      snowDepthTop,
-      snowYTD,
-      lastUpdated,
-      isError: false
-    };
-    console.log("Processed lost trail report:", this.lostReportJson);
+    // const reportObj = rows.reduce(
+    //   (prev, row) => {
+    //     const [key, val] = row.children;
+    //     if (key.innerText) {
+    //       prev[key.innerText] = val.innerText;
+    //     }
+    //     return prev;
+    //   },
+    //   { lastUpdated }
+    // );
+    // const {
+    //   "12 hr": newSnow,
+    //   "24 hr": snow24,
+    //   "48hr": snow48,
+    //   "72hr ": snow72,
+    //   "Base of snow at the Lodge ": snowDepthBottom,
+    //   "Base of snow at the Summit ": snowDepthTop,
+    //   "Snowfall To Date- 11-9-18": snowYTD
+    // } = reportObj;
+    // this.lostReportJson = {
+    //   newSnow,
+    //   snow24,
+    //   snow48,
+    //   snow72,
+    //   snowDepthBottom,
+    //   snowDepthTop,
+    //   snowYTD,
+    //   lastUpdated,
+    //   isError: false
+    // };
+    // console.log("Processed lost trail report:", this.lostReportJson);
   },
 
   getDom() {
