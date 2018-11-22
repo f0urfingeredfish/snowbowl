@@ -205,7 +205,7 @@ Module.register("snowbowl", {
       this.lostReportJson = {
         newSnow: data.pastSnow.snow0day,
         temp: data.weather0day.top_temp,
-        weather: data.weather0day.weather_symbol,
+        weather: data.weather0day.weather_symbol.replace("_", " "),
         isError: false
       };
       console.log("Processed lost trail report:", this.lostReportJson);
@@ -380,12 +380,12 @@ Module.register("snowbowl", {
           ? `<span class="wi weathericon wi-snow"></span> New Snow ${newSnow}" </br>`
           : ""
       }
+      ${Number(temp) ? `Summit ${temp}° </br>` : ""}
       ${
-        Number(temp)
-          ? `<span class="wi weathericon wi-snow"></span> Summit ${temp}° </br>`
+        weather
+          ? `<div style="text-transform: capitalize;">${weather}</div>`
           : ""
       }
-      ${weather ? `${weather}" </br>` : ""}
       `;
 
       wrapper.appendChild(report);
