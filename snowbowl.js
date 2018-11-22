@@ -377,19 +377,15 @@ Module.register("snowbowl", {
       report.innerHTML = `
       ${
         Number(newSnow)
-          ? `<span class="wi weathericon wi-snow"></span> Storm ${newSnow}" </br>`
+          ? `<span class="wi weathericon wi-snow"></span> New Snow ${newSnow}" </br>`
           : ""
       }
       ${
         Number(temp)
-          ? `<span class="wi weathericon wi-snow"></span> Temp ${temp}°" </br>`
+          ? `<span class="wi weathericon wi-snow"></span> Summit ${temp}° </br>`
           : ""
       }
-      ${
-        Number(weather)
-          ? `<span class="wi weathericon wi-snow"></span> 48hr ${weather}" </br>`
-          : ""
-      }
+      ${weather ? `${weather}" </br>` : ""}
       `;
 
       wrapper.appendChild(report);
