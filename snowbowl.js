@@ -382,7 +382,7 @@ Module.register("snowbowl", {
       }
       ${
         weather
-          ? `<div style="text-transform: capitalize;">${weather}</div>`
+          ? `<div style="text-transform: capitalize;">${weather.toLowerCase()}</div>`
           : ""
       }
       ${Number(temp) ? `Summit ${temp}° </br>` : ""}
