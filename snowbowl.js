@@ -380,12 +380,12 @@ Module.register("snowbowl", {
           ? `<span class="wi weathericon wi-snow"></span> New Snow ${newSnow}" </br>`
           : ""
       }
-      ${Number(temp) ? `Summit ${temp}° </br>` : ""}
       ${
         weather
           ? `<div style="text-transform: capitalize;">${weather}</div>`
           : ""
       }
+      ${Number(temp) ? `Summit ${temp}° </br>` : ""}
       `;
 
       wrapper.appendChild(report);
