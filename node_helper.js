@@ -43,7 +43,7 @@ module.exports = NodeHelper.create({
   socketNotificationReceived: async function(notification, payload) {
     if (notification === "snowbowl-GET_REPORTS") {
       try {
-        const report = await getHTML("https://montanasnowbowl.com/report.php3");
+        const report = await getHTML("https://montanasnowbowl.com/report.php");
         this.sendSocketNotification("snowbowl-GET_REPORT_SUCCESS", report);
       } catch (error) {
         console.error("snowbowl", error);
