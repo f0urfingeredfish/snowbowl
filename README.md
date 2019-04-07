@@ -2,7 +2,12 @@
 
 This is a module for the [MagicMirror²](https://github.com/MichMich/MagicMirror/).
 
-Todo: Insert description here!
+This module rotates through the snow reports for [Discovery](https://www.skidiscovery.com/), [Snowbowl](https://www.montanasnowbowl.com/), and [Lost Trail](https://www.losttrail.com/) ski areas.
+
+
+## Screenshot
+![image](https://user-images.githubusercontent.com/399068/55690234-c55aeb00-594b-11e9-96b5-7d8c85d6e365.png)
+
 
 ## Using the module
 
