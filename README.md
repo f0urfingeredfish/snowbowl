@@ -18,7 +18,9 @@ var config = {
         {
             module: 'snowbowl',
             config: {
-                // See below for configurable options
+                updateInterval: 10 * 1000,
+                fetchReportInterval: 1000 * 60 * 60,
+                retryDelay: 5000
             }
         }
     ]
@@ -27,7 +29,8 @@ var config = {
 
 ## Configuration options
 
-| Option           | Description
-|----------------- |-----------
-| `option1`        | *Required* DESCRIPTION HERE
-| `option2`        | *Optional* DESCRIPTION HERE TOO <br><br>**Type:** `int`(milliseconds) <br>Default 60000 milliseconds (1 minute)
+| Option                 | Description
+|----------------------- |-----------
+| `updateInterval`       | *Optional* Interval for rotating through snow reports. Default: 10 seconds
+| `fetchReportInterval`  | *Optional* How often to fetch new snow reports. Default: 60 minutes
+| `retryDelay`           | *Optional* How often to retry a failed report fetch. Default: 5 seconds
